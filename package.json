@@ -1,0 +1,74 @@
+{
+  "name": "aikeys",
+  "displayName": "AIKeys",
+  "description": "A VSCode extension to manage and use AI tools from varied sources.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:aikeys.openSettings"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aikeys.openSettings",
+        "title": "AIKeys: Open Settings"
+      }
+    ],
+    "configuration": {
+      "title": "AIKeys",
+      "properties": {
+        "AIKeys.defaultModel": {
+          "type": "string",
+          "description": "Choose your AI Model",
+          "default": "GBT3 - Text",
+          "enum": [
+            "GBT3 - Text",
+            "Codex - Code",
+            "DALL·E - Image"
+          ],
+          "enumDescriptions": [
+            "Low-Cost from OpenAI",
+            "Free from OpenAI",
+            "Low-Cost from OpenAI"
+          ]
+        },
+        "AIKeys.defaulPrefix": {
+          "type": "string",
+          "description": "Add a preffix to start your prompt",
+          "default": ""
+        },
+        "AIKeys.Keys.openAI": {
+          "type": "string",
+          "description": "Set your API Key"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.9.3",
+    "@vscode/test-electron": "^2.2.0"
+  }
+}
