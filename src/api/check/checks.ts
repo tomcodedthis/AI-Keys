@@ -35,18 +35,17 @@ export function checkArgs(prompt: string) {
 	const language = getLanguage() as string
 	const optimise = ["op", "optimise", "optiimize"]
 	const convert = ["cv", "convert"]
+	const defaultPrompt = `${prompt}`
 
-	if (!ARGS_SUPPORTED.some((arg) => prompt.includes(arg))) return prompt
+	if (!ARGS_SUPPORTED.some((arg) => prompt.includes(arg))) return defaultPrompt
 	
 	if (optimise.some((phrase) => { prompt.includes(phrase) })) {
 		prompt = processArg(prompt, "op", `optimise this ${language} code `)
 	} else if (convert.some((phrase) => { prompt.includes(phrase) })) {
 		prompt = processArg(prompt, "cv", `convert this ${language} code to `)
-	} else {
-		prompt = `${language} ${prompt}`
 	}
 
-	return prompt
+	return defaultPrompt
 }
 
 export function checkAPI() {

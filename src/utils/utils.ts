@@ -1,15 +1,16 @@
 import * as vscode from "vscode"
 import { openSettings } from "../navigation/settings"
 
-export function log(text: unknown) {
-	console.log(text)
+export function log(text: unknown, ms = 2000) {
+	console.log(text, ms)
+	// vscode.window.setStatusBarMessage(text as string, ms)
 }
 
 export function notif(message: string, setting = "none", timeout = 10) {
 	vscode.window.withProgress(
 		{
 			location: vscode.ProgressLocation.Notification,
-			title: message + ". Closing notification ",
+			title: message + ". ",
 			cancellable: true,
 		},
 		async (progress) => {

@@ -14,4 +14,5 @@ export interface OpenAIRequest {
 	top_p: number
 	frequency_penalty: number
 	presence_penalty: number
+	stream: boolean
 }

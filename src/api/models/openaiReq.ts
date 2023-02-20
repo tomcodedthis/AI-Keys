@@ -8,13 +8,15 @@ import {
 	TOP_P_DEFAULT,
 } from "../../utils/defaults"
 import { OpenAIApi } from "openai"
-import { notif, log, sleep } from "../../utils/utils"
+import { notif, log } from "../../utils/utils"
 import { processError } from "../check/process"
 import { checkAPI, checkArgs } from "../check/checks"
+import 'image-downloader'
+import { getComment } from "../get/get"
 
-export async function openaiRequest(aiName: string, prompt: string, comment: string) {
+export async function openaiRequest(aiName: string, prompt: string) {
 	const openai = checkAPI() as OpenAIApi
-	prompt = checkArgs(prompt)
+	prompt = checkArgs(prompt).trim()
 
 	const req: OpenAIRequest = {
 		model:
@@ -27,59 +29,81 @@ export async function openaiRequest(aiName: string, prompt: string, comment: str
 		top_p: TOP_P_DEFAULT,
 		frequency_penalty: FREQ_PEN_DEFAULT,
 		presence_penalty: PRES_PEN_DEFAULT,
+		stream: false,
 	}
 
-	if (req.model === "codex") {
-		req.temperature =
-			req.temperature !== 1 ? ((req.temperature - 1) * 2) / 10 : req.temperature
-	}
+	if (req.model === "codex") { req.temperature = req.temperature / 2 }
 
+	if (aiName.toLowerCase() === "dalle") { return await imageRequest(openai, prompt, aiName.toLowerCase()) }
+
+	return await textRequest(openai, req, aiName)
+}
+
+export async function textRequest(openai: OpenAIApi, req: OpenAIRequest, aiName: string) {
 	await vscode.window.withProgress(
 		{
 			location: vscode.ProgressLocation.Notification,
-			title: `${aiName} is thinking of a respoonse...` as string,
+			title: `${aiName.toUpperCase()} is thinking of a respoonse...` as string,
+			cancellable: false,
+		},
+		async () => {
+			log(req)
+
+			await openai
+				.createCompletion(req)
+				.then((response) => {
+					notif(`Here's what ${aiName.toUpperCase()} thinks` as string)
+					const editor = vscode.window.activeTextEditor as vscode.TextEditor
+					const res = response.data.choices[0].text as string
+					const comment = getComment()
+
+					editor.edit((line) => {
+						const text = res.split('').map((letter) => {
+							return letter == `\n`
+								? letter += `${comment} `
+								: letter
+						})
+
+						line.insert(editor.selection.end, `\n${comment} ${text.join('')}`)
+					})
+				})
+				.catch((err) => {
+					notif(
+						"OpenAI response: " + err.response.data.error.message,
+						"aikeys.keys",
+						60
+					)
+					processError(err.response.status)
+					log(err.response)
+				})
+		}
+	)
+}
+
+export async function imageRequest(openai: OpenAIApi, prompt: string, aiName: string) {
+	await vscode.window.withProgress(
+		{
+			location: vscode.ProgressLocation.Notification,
+			title: `${aiName.toUpperCase()} is thinking of a respoonse...` as string,
 			cancellable: false,
 		},
 		async () => {
 			await openai
-				.createCompletion(req)
+				.createImage({
+					prompt: prompt,
+					n: 1,
+					size: "256x256"
+				})
 				.then((response) => {
 					const editor = vscode.window.activeTextEditor as vscode.TextEditor
+					const res = response.data.data[0].url as string
+					const comment = getComment()
+
 					editor.edit((line) => {
-						notif(`Here's what ${aiName} thinks` as string)
-
-						const res = response.data.choices[0].text as string
-						const words = res.split(" ")
-
-						line.insert(editor.selection.end, "\n" + comment)
-
-						if (res.length > 200) {
-							let lineLetterLength = 200
-	
-							while (words.length > 0) {
-								const word = words.shift() + " "
-								if (!word) break
-	
-								lineLetterLength >= 0
-									? line.insert(editor.selection.end, `${comment} ${word}`)
-									: line.insert(editor.selection.end, `${comment} ${word} \n`)
-
-								lineLetterLength -= word.length
-								if (lineLetterLength <= 0) {
-									lineLetterLength = 100
-								}
-
-								sleep(50)
-							}
-						} else {
-							line.insert(
-								editor.selection.end,
-								response.data.choices[0].text as string
-							)
-						}
+						line.insert(editor.selection.end, `\n${comment} Also available here:\n${comment} ${res}`)
 					})
 
-					vscode.window.setStatusBarMessage("Here's what I know...", 5000)
+					notif(`Here's your ${aiName.toUpperCase()} image` as string)
 				})
 				.catch((err) => {
 					notif(

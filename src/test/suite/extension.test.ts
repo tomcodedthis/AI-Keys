@@ -21,6 +21,9 @@ import * as vscode from "vscode"
 
 // gbt : say hello
 
+// # test = image url
+// # dalle: a smiling dog
+
 // to-do - add support for multiline comment and config prompts with no model
 // op : 
 // def add(x, y):

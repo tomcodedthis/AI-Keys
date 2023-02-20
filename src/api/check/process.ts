@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 import { notif } from "../../utils/utils"
 import { openSettings } from "../../navigation/settings"
-import { COMMENT_SYMBOLS } from "../../utils/defaults"
+import { getComment } from "../get/get"
 
 export const textEditor = ( message = "I need an open text editor to read and write") => {
 	const editor = vscode.window.activeTextEditor
@@ -50,10 +50,11 @@ export function processArg(prompt: string, arg: string, message: string) {
 }
 
 export function uncomment(prompt: string) {
-	for (const sym of COMMENT_SYMBOLS) {
-		if (prompt.includes(sym)) {
-			prompt = prompt.replace(sym, "")
-		}
+	const comment = getComment()
+
+	if (prompt.includes(comment)) {
+		prompt = prompt.replace(comment, "")
 	}
+
 	return prompt
 }

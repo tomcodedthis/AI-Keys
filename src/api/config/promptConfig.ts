@@ -5,33 +5,37 @@ import {
 } from "../../utils/defaults"
 import { openaiRequest } from "../models/openaiReq"
 import { notif, log } from "../../utils/utils"
-import { currentComment } from "../get/get"
 import { uncomment } from "../check/process"
 
 export async function searchWithConfig(prompt: string) {
-	const comment = currentComment(prompt)
 	prompt = uncomment(prompt)
 
 	const wordArray = prompt.trim().split(":")
-	const model = wordArray[0].toLowerCase()
-	log(model)
-	if (!MODELS_SUPPORTED.includes(model)) {
+	const model = wordArray[0].toLowerCase().trim()
+
+	if (supported(model)) openaiRequest(model, wordArray[1])
+}
+
+export function searchWithoutConfig(prompt: string) {
+	const model = MODEL_DEFAULT.toLowerCase()
+	prompt = uncomment(prompt)
+
+	if (supported(model)) openaiRequest(model, prompt.trim())
+}
+
+export function supported(model: string) {
+	if (!MODELS_SUPPORTED.includes(model.toLowerCase())) {
 		notif(
 			"I don't recognise that model, check prompt or see our list of supported models",
 			"aikeys.model"
 		)
-		return
+		return false
 	}
 
 	if (OPENAI_MODELS.includes(model)) {
 		log("Starting OpenAI request..")
-		openaiRequest(model, wordArray[1], comment)
+		return true
 	}
-}
 
-export function searchWithoutConfig(prompt: string) {
-	const comment = currentComment(prompt)
-	prompt = uncomment(prompt)
-
-	openaiRequest(MODEL_DEFAULT, prompt.trim(), comment)
+	return false
 }

@@ -8,7 +8,7 @@ export const PREFIX_DEFAULT = vscode.workspace
 	.get("prefix") as string
 
 // to-do: add these to extension vscode.workspace configuration
-export const TEMP_DEFAULT = 0.7
+export const TEMP_DEFAULT = 0.4
 export const MAX_TOKENS_DEFAULT = 20
 export const TOP_P_DEFAULT = 1
 export const FREQ_PEN_DEFAULT = 0
@@ -23,4 +23,12 @@ export const ARGS_SUPPORTED = [
 	"convert",
 ]
 export const OPENAI_MODELS = ["gbt", "gbt3", "codex", "dalle"]
-export const COMMENT_SYMBOLS = ["//", "/*", "*/", "#"]
+export const COMMENT_SYMBOLS = {
+	'javascript': '//',
+	'typescript': '//',
+	'java':  '//',
+	'csharp':  '//',
+	'python': '#',
+    'ruby': '#',
+    'php': '#'
+}

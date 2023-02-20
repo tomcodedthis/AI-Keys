@@ -11,7 +11,7 @@ export function getLanguage() {
 		return undefined
 	}
 
-	const language = vscode.window.activeTextEditor?.document.languageId
+	const language = editor.document.languageId
 
 	return language
 }
@@ -39,11 +39,12 @@ export function getPrompt(prompt: vscode.TextLine) {
 	return prompt.text as string
 }
 
-export const currentComment = (prompt: string) => {
-	for (const sym of COMMENT_SYMBOLS) {
-		if (prompt.includes(sym)) {
-			return sym
-		}
+export const getComment = () => {
+	const language = getLanguage()
+
+	for (const [key, value] of Object.entries(COMMENT_SYMBOLS)) {
+		if (key == language) return value
 	}
-	return ""
+
+	return "//"
 }
