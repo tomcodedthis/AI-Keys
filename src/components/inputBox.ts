@@ -1,10 +1,7 @@
 import * as vscode from "vscode"
 import { hasConfig } from "../utils/utils"
 import { checkInput } from "../api/check/checks"
-import {
-	searchWithConfig,
-	searchWithoutConfig,
-} from "../api/config/promptConfig"
+import { withConfig, withoutConfig } from "../api/config/preConfig"
 
 export async function showInputBox() {
 	await vscode.window
@@ -16,6 +13,6 @@ export async function showInputBox() {
 			if (!checkInput(prompt) || !prompt) return
 			prompt = prompt as string
 
-			hasConfig(prompt) ? searchWithConfig(prompt) : searchWithoutConfig(prompt)
+			hasConfig(prompt) ? withConfig(prompt) : withoutConfig(prompt)
 		})
 }

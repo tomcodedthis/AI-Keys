@@ -1,9 +1,8 @@
 import { Configuration, OpenAIApi } from "openai"
 import * as vscode from "vscode"
-import { ARGS_SUPPORTED } from "../../utils/defaults"
 import { notif } from "../../utils/utils"
-import { getLanguage, getPrompt } from "../get/get"
-import { keyExists, processArg } from "./process"
+import { getPrompt } from "../get/get"
+import { keyExists } from "./process"
 
 export function checkLine() {
 	const editor = vscode.window.activeTextEditor as vscode.TextEditor
@@ -29,24 +28,6 @@ export function checkInput(prompt: string | undefined) {
 	}
 
 	return true
-}
-
-export function checkArgs(prompt: string) {
-	const language = getLanguage() as string
-	const optimise = ["op", "optimise", "optiimize"]
-	const convert = ["cv", "convert"]
-
-	if (!ARGS_SUPPORTED.some((arg) => prompt.includes(arg))) return prompt
-	
-	if (optimise.some((phrase) => { prompt.includes(phrase) })) {
-		prompt = processArg(prompt, "op", `optimise this ${language} code `)
-	} else if (convert.some((phrase) => { prompt.includes(phrase) })) {
-		prompt = processArg(prompt, "cv", `convert this ${language} code to `)
-	} else {
-		prompt = `${language} ${prompt}`
-	}
-
-	return prompt
 }
 
 export function checkAPI() {

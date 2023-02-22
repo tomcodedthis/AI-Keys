@@ -4,10 +4,7 @@ import { showInputBox } from "./components/inputBox"
 import { hasConfig } from "./utils/utils"
 import { checkLine } from "./api/check/checks"
 import { textEditor } from "./api/check/process"
-import {
-	searchWithConfig,
-	searchWithoutConfig,
-} from "./api/config/promptConfig"
+import { withConfig, withoutConfig } from "./api/config/preConfig"
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log("AIKeys actived")
@@ -30,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
 				return
 			}
 
-			hasConfig(prompt) ? searchWithConfig(prompt) : searchWithoutConfig(prompt)
+			hasConfig(prompt) ? withConfig(prompt) : withoutConfig(prompt)
 		}
 	)
 
