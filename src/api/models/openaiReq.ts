@@ -2,16 +2,17 @@ import * as vscode from "vscode"
 import { OpenAIRequest } from "../../utils/types"
 import {
 	FREQ_PEN_DEFAULT,
+	IMAGE_COUNT_DEFAULT,
+	IMAGE_SIZE_DEFAULT,
 	MAX_TOKENS_DEFAULT,
 	PRES_PEN_DEFAULT,
 	TEMP_DEFAULT,
 	TOP_P_DEFAULT,
 } from "../../utils/defaults"
 import { OpenAIApi } from "openai"
-import { notif, log } from "../../utils/utils"
+import { notif, log, download } from "../../utils/utils"
 import { processError } from "../check/process"
 import { checkAPI, checkArgs } from "../check/checks"
-import 'image-downloader'
 import { getComment } from "../get/get"
 
 export async function openaiRequest(aiName: string, prompt: string) {
@@ -91,29 +92,23 @@ export async function imageRequest(openai: OpenAIApi, prompt: string, aiName: st
 			await openai
 				.createImage({
 					prompt: prompt,
-					n: 1,
-					size: "256x256"
+					n: IMAGE_COUNT_DEFAULT,
+					size: IMAGE_SIZE_DEFAULT
 				})
-				.then((response) => {
+				.then(async (response) => {
 					const editor = vscode.window.activeTextEditor as vscode.TextEditor
 					const res = response.data.data[0].url as string
 					const comment = getComment()
 
-					editor.edit((line) => {
-						line.insert(editor.selection.end, `\n${comment} Also available here:\n${comment} ${res}`)
+					await download(res, prompt).then(() => {
+						editor.edit((line) => {
+							line.insert(editor.selection.end, `\n${comment} Also available here:\n${comment} ${res}`)
+						})
+	
+						notif(`Here's your ${aiName.toUpperCase()} image` as string)
 					})
-
-					notif(`Here's your ${aiName.toUpperCase()} image` as string)
 				})
-				.catch((err) => {
-					notif(
-						"OpenAI response: " + err.response.data.error.message,
-						"aikeys.keys",
-						60
-					)
-					processError(err.response.status)
-					log(err.response)
-				})
+				.catch((err) => { log(err) })
 		}
 	)
 }
