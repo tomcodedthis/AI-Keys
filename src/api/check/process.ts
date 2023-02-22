@@ -45,10 +45,6 @@ export function processError(code: number) {
 		return
 }
 
-export function processArg(prompt: string, arg: string, message: string) {
-	return message + prompt.replace(arg, "")
-}
-
 export function uncomment(prompt: string) {
 	const comment = getComment()
 

@@ -25,12 +25,21 @@ export const COMMENT_SYMBOLS = {
     'ruby': '#',
     'php': '#'
 }
-export const ARGS_SUPPORTED = [
-	"op",
-	"optimise",
-	"optimize",
-	"cv",
-	"convert",
-]
+export const ARGS_SUPPORTED = {
+	op: [
+		"op",
+		"optimise",
+		"optimize"
+	],
+	cv: [
+		"cv",
+		"convert"
+	],
+	ex: [
+		"ex",
+		"explain"
+	]
+}
+export const CONVERT_DEFAULT = "javascript"
 export const MODELS_SUPPORTED = ["gbt", "gbt3", "codex", "dalle"]
 export const OPENAI_MODELS = ["gbt", "gbt3", "codex", "dalle"]

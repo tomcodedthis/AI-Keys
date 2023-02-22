@@ -12,18 +12,14 @@ import {
 import { OpenAIApi } from "openai"
 import { notif, log, download } from "../../utils/utils"
 import { processError } from "../check/process"
-import { checkAPI, checkArgs } from "../check/checks"
+import { checkAPI } from "../check/checks"
 import { getComment } from "../get/get"
 
 export async function openaiRequest(aiName: string, prompt: string) {
 	const openai = checkAPI() as OpenAIApi
-	prompt = checkArgs(prompt).trim()
 
 	const req: OpenAIRequest = {
-		model:
-			aiName.toLowerCase() === "codex"
-				? "code-davinci-002"
-				: "text-davinci-003",
+		model: aiName,
 		prompt: prompt,
 		temperature: TEMP_DEFAULT,
 		max_tokens: MAX_TOKENS_DEFAULT,

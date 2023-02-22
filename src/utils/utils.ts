@@ -5,8 +5,8 @@ import * as https from "https"
 import * as path from "path"
 import { IMAGE_TYPE_DEFAULT } from "./defaults"
 
-export function log(text: unknown, ms = 2000) {
-	console.log(text, ms)
+export function log(text: unknown) {
+	console.log(text)
 	// vscode.window.setStatusBarMessage(text as string, ms)
 }
 
@@ -39,10 +39,6 @@ export const sleep = (ms: number): Promise<unknown> => {
 	})
 }
 
-export function join(text: string, symbol: string) {
-	return text.split(' ').join(symbol)
-}
-
 export async function download(url: string, prompt: string) {
 	log(`Downloading image...`)
 
@@ -70,6 +66,10 @@ export async function download(url: string, prompt: string) {
 			log(`Image downloaded at ${filePath}`);
 		});
 	});
+}
+
+export function join(text: string, symbol: string) {
+	return text.split(' ').join(symbol)
 }
 
 export const hasConfig = (prompt: string) => prompt.includes(":")
