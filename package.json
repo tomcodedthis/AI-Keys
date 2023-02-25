@@ -1,17 +1,20 @@
 {
 	"name": "aikeys",
 	"displayName": "AI-Keys",
-	"description": "A VSCode extension to manage and use AI tools from varied sources.",
+	"description": "Query different generative AI models from varied providers.",
+	"icon": "aikeys-icon.png",
+	"repository": {
+		"url": "https://github.com/tomcodedthis/AI-Keys"
+	  },
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
 	"categories": [
+		"Machine Learning",
 		"Other"
 	],
-	"activationEvents": [
-		"onCommand:aikeys.checkPrompt"
-	],
+	"activationEvents": [],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
@@ -25,7 +28,7 @@
 			},
 			{
 				"command": "aikeys.sendBoxPrompt",
-				"title": "AI-Keys: Search Input"
+				"title": "AI-Keys: Search Prompt"
 			}
 		],
 		"configuration": [
@@ -59,10 +62,30 @@
 							"Low-Cost: Image-generation from OpenAI"
 						]
 					},
+					"AI-Keys.maxTokens": {
+						"type": "number",
+						"description": "Set your max token response (1 token = 1 character)",
+						"default": 100
+					},
 					"AI-Keys.prefix": {
 						"type": "string",
 						"description": "Add an optional preffix to start your prompt",
 						"default": ""
+					},
+					"AI-Keys.imageFormat": {
+						"type": "string",
+						"description": "Choose the format of AI image generated.\n\nWINDOW NEEDS TO BE REFRESED TO TAKE EFFECT",
+						"default": "webp",
+						"enum": [
+							"webp",
+							"jpg",
+							"png"
+						],
+						"enumDescriptions": [
+							"webp",
+							"jpg",
+							"png"
+						]
 					}
 				}
 			}
@@ -82,7 +105,8 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"format": "prettier-eslint \"src/**/*.ts\""
 	},
 	"devDependencies": {
 		"@types/glob": "^8.0.0",
@@ -95,11 +119,13 @@
 		"eslint": "^8.34.0",
 		"glob": "^8.0.3",
 		"mocha": "^10.1.0",
+		"prettier-eslint": "^15.0.1",
+		"prettier-eslint-cli": "^7.1.0",
 		"typescript": "^4.9.5"
 	},
 	"dependencies": {
-		"image-downloader": "^4.3.0",
 		"node-fetch": "^3.3.0",
-		"openai": "^3.1.0"
+		"openai": "^3.1.0",
+		"title-case": "^3.0.3"
 	}
 }

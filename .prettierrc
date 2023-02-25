@@ -3,6 +3,5 @@
 	"tabWidth": 2,
 	"semi": false,
 	"bracketSameLine": true,
-	"endOfLine": "auto",
-	"arrowParens": "always"
+	"printWidth": 100
 }

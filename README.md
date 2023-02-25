@@ -1,64 +1,140 @@
-# AIKeys
+# AI-Keys
 
-## **Features**
+A VSCode extension to use and manage AI from varied sources.
 
-A VSCode extension to manage and use AI tools from varied sources.
+Keep control of your keys, usage and costs directly to the model provider.
 
-You supply the key to easily unlock different AI capabilites.
+![AI-Keys Demo](https://github.com/tomcodedthis/AI-Keys/blob/master/images/aikeys-demo.gif)
 
-To use:
+---
 
-**1** Comment a prompt to send a request.
-**2** Add an optional arugments to configure request (AI Model, Optimize Comment)
-**3** Keeping focused on your prompt line, press **CMD** + **Shift** + **?** to search your prompt.
+## Features
 
-## **Available Models**
+**Inline**
+Focus your prompt line, then press `CMD/CTRL + Shift + ?`
 
-| Model  | Prefix | Example                                                             |
-| ------ | ------ | ------------------------------------------------------------------- |
-| GBT-3  | gbt3   | `gbt3: which ai modei is chatgbt`                                   |
-| Codex  | codex  | `codex: write a function that sums a group of numbers`              |
-| DALL·E | dalle  | `dalle: create an image of a cartoon celebrating completing a task` |
+**Input Box**
+`CMD/CTRL + Shift + P` and search for `AI-Keys: Search Prompt`
 
-## **Prefix Options**
+Specify model (default is customizable):
 
-| Argumments | Description                                  | Examples           |
-| ---------- | -------------------------------------------- | ------------------ |
-| op         | Optimise current prompt                      | `gbt3: op`         |
-|            |                                              | `codex: op`        |
-| cv         | Convert current prompt to specified language | `gbt3: cv python`  |
-|            |                                              | `codex: cv python` |
+```python
+gbt tell a joke
+```
 
-## **Requirements**
+```python
+codex write a function that adds 2 numbers
+```
 
-Atleast one API key from our listed AI:
+```python
+dalle an image of a smiling dog
+```
 
-#### [OpenAI](https://platform.openai.com/account/api-keys)
+- Shorthand configuration (convert / optimise / explain):
 
-    GBT-3 (text-generation: low-cost)
-    Codex (code-generation: free)
-    DALL·E (imgage-generation: low-cost)
+```python
+cv javascript def add(x, y) return x + y
 
-## **Extension Settings**
+# convert javascript 
+# def add(x, y):
+#   return x + y
+```
 
-- `aikeys.goToSettings`: Open extension settings.
-- `aikeys.sendPrompt`: Sends a request to user-configured AI Model (Default: gbt3)
+```typescript
+op def add(x, y) return x + y
 
-## **Known Issues**
+// optimise
+// function add(x, y) {
+//   return x + y
+// }
+```
+
+```python
+ex def add(x, y) return x + y
+
+# explain
+# def add(x, y):
+#   return x + y`
+```
+
+---
+
+## Usage
+
+Multiline prompts are currently only supported for **comments**
+
+**Setup**
+`CMD/CTRL + Shift + P` and search for `AI-Keys: Open Settings`
+
+- Set API Keys and default configuration:
+![AI-Keys Settings](https://github.com/tomcodedthis/AI-Keys/raw/master/images/aikeys-settings.png)
+
+---
+
+| Model  | Prefix | Example |
+| ------ | ------ | ------- |
+| GBT-3  | `gbt` / `gbt3` | `gbt what is ai model gbt3` |
+| | | `gbt3 what is ai model gbt` |
+| Codex  | `codex` | `codex write a function that sums an array of numbers` |
+| DALL·E | `dalle` | `dalle a smiling dog` |
+
+| Argumment | Examples | Description
+| ---------- | ----------- | -------- |
+| optimise/ze | `optimise` / `gbt3 op` | Optimise prompt |
+| convert | `cv python` / `codex cv typescript` | Convert prompt to specified language |
+| explain | `explain` / `gbt3 ex` | Explain prompt |
+---
+
+## Requirements
+
+Atleast one API key from our supported AI providers:
+
+### [OpenAI](https://platform.openai.com/account/api-keys)
+
+GBT-3 (text-generation: low-cost but more accurate)
+Codex (code-generation: free)
+DALL·E (imgage-generation: higher-cost)
+
+---
+
+## Extension Settings
+
+- `aikeys.goToSettings`: Open extension settings
+- `aikeys.sendLinePrompt`: Send prompts from inline active editor
+- `aikeys.sendBoxPrompt`: Send prompts from VSCode input box
+
+---
+
+## Known Issues
 
 Please raise any issues / suggestions
 
-## **To-Do**
+### To-Do
 
-- More AI Model integrations
-- Smoother prompt input and response handling (in-progress)
+Contributions are widely encouraged, get involved to earn XP
+
+- Write proper tests for pre-release checks
+- Stream response [info](https://github.com/openai/openai-node/issues/18)
+- More models/provider integrations
+- More types of generation (tts, video, 3d models)
 - Add auto completion for arguments
-- Add keyboard shortcuts
+- Support for fine-tuned models
 - More-configuration options:
-  - Specific fine-tuned models
   - Train own models
 
-## **Release Notes**
+---
+
+## In-Development
+
+Features currently being worked on:
+
+- Multiple providers (Google, rev.ai)
+- Storing secret API keys
+- More configuration options
+
+---
+
+## Release Notes
 
 ### 0.0.1
 
