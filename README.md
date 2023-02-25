@@ -4,7 +4,7 @@ A VSCode extension to use and manage AI from varied sources.
 
 Keep control of your keys, usage and costs directly to the model provider.
 
-![AI-Keys Demo](https://github.com/tomcodedthis/AI-Keys/blob/master/images/aikeys-demo.gif)
+![AI-Keys Demo](https://github.com/tomcodedthis/AI-Keys/blob/main/images/aikeys-demo.gif?raw=true)
 
 ---
 
@@ -67,7 +67,7 @@ Multiline prompts are currently only supported for **comments**
 `CMD/CTRL + Shift + P` and search for `AI-Keys: Open Settings`
 
 - Set API Keys and default configuration:
-![AI-Keys Settings](https://github.com/tomcodedthis/AI-Keys/raw/master/images/aikeys-settings.png)
+![AI-Keys Settings](https://github.com/tomcodedthis/AI-Keys/blob/main/images/aikeys-settings.png?raw=true)
 
 ---
 
