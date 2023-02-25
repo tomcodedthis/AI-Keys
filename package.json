@@ -1,7 +1,7 @@
 {
 	"name": "aikeys",
 	"displayName": "AI-Keys",
-	"description": "Query different generative AI models from varied providers.",
+	"description": "Connects to different generative AI models from varied providers.",
 	"publisher": "tomcodedthis",
 	"icon": "aikeys-icon.png",
 	"repository": {

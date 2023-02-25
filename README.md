@@ -4,8 +4,6 @@ A VSCode extension to use and manage AI from varied sources.
 
 Keep control of your keys, usage and costs directly to the model provider.
 
-![AI-Keys Demo](https://github.com/tomcodedthis/AI-Keys/blob/main/images/aikeys-demo.gif?raw=true)
-
 ---
 
 ## Features
