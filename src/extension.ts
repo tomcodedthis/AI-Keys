@@ -1,47 +1,39 @@
 import * as vscode from "vscode"
-import { openSettings } from "./navigation/settings"
 import { showInputBox } from "./components/inputBox"
-import { hasConfig } from "./utils/utils"
-import { checkLine } from "./api/check/checks"
-import { textEditor } from "./api/check/process"
-import { withConfig, withoutConfig } from "./api/config/preConfig"
+import { config } from "./api/config/config"
+import { PromptConfig } from "./utils/types"
+import { processLine } from "./api/process/process"
+import { activeEditor } from "./api/process/check"
+import { go, log, notif } from "./utils/utils"
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log("AIKeys actived")
+	log("AIKeys: Actived")
 
-	const settings = vscode.commands.registerCommand(
-		"aikeys.goToSettings",
-		() => {
-			vscode.window.showInformationMessage("Going to settings...")
-			openSettings("none")
+	const settings = vscode.commands.registerCommand("aikeys.goToSettings", () => {
+		notif("Opening settings", 5, "none")
+		log("AI-Keys: Opening settings")
+		go("none")
+	})
+
+	const sendLinePrompt = vscode.commands.registerCommand("aikeys.sendLinePrompt", async () => {
+		const prompt = processLine() as PromptConfig
+
+		if (!prompt) {
+			await vscode.commands.executeCommand("aikeys.sendBoxPrompt")
+			return
 		}
-	)
 
-	const sendLinePrompt = vscode.commands.registerCommand(
-		"aikeys.sendLinePrompt",
-		async () => {
-			const prompt = checkLine()
+		config(prompt)
+	})
 
-			if (!prompt) {
-				await vscode.commands.executeCommand("aikeys.sendBoxPrompt")
-				return
-			}
-
-			hasConfig(prompt) ? withConfig(prompt) : withoutConfig(prompt)
-		}
-	)
-
-	const sendBoxPrompt = vscode.commands.registerCommand(
-		"aikeys.sendBoxPrompt",
-		async () => {
-			if (!textEditor()) return
-			await showInputBox()
-		}
-	)
+	const sendBoxPrompt = vscode.commands.registerCommand("aikeys.sendBoxPrompt", async () => {
+		if (!activeEditor()) return
+		await showInputBox()
+	})
 
 	context.subscriptions.push(settings, sendLinePrompt, sendBoxPrompt)
 }
 
 export function deactivate() {
-	vscode.window.showInformationMessage("AIKeys deactived")
+	log("AIKeys: Deactived")
 }

@@ -16,3 +16,8 @@ export interface OpenAIRequest {
 	presence_penalty: number
 	stream: boolean
 }
+
+export interface PromptConfig {
+	text: string
+	nextLine: number
+}
