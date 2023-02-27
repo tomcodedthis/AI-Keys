@@ -27,5 +27,9 @@ export const ARGS_SUPPORTED = {
 	ex: ["ex", "explain"],
 }
 export const CONVERT_DEFAULT = "javascript"
-export const MODELS_SUPPORTED = ["gbt", "gbt3", "codex", "dalle"]
-export const OPENAI_MODELS = ["gbt", "gbt3", "codex", "dalle"]
+export const MODELS_DEFAULT: {[key: string]: string} = {
+	"gbt": "text-davinci-003",
+	"gbt3": "text-davinci-003",
+	"codex": "code-davinci-002",
+	"dalle": "dalle"
+}

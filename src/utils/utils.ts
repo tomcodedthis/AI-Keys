@@ -78,10 +78,9 @@ export async function download(url: string, prompt: string) {
 
 		fileStream.on("finish", () => {
 			editor.edit((line) => {
-				line.insert(editor.selection.end, `\n${comment}\n${comment} Image downloaded here: ${filePath}\n`)
+				line.insert(editor.selection.end, `\n${comment}\n${comment} Image downloaded here:\n${comment} ${filePath}\n`)
 			})
 
-			notif(`Image downloaded here: ${filePath}`)
 			log("AI-Keys: Image download success")
 		})
 	})

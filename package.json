@@ -7,12 +7,11 @@
 	"repository": {
 		"url": "https://github.com/tomcodedthis/AI-Keys"
 	},
-	"version": "0.0.1",
+	"version": "0.0.3",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
 	"categories": [
-		"Machine Learning",
 		"Other"
 	],
 	"activationEvents": [],
@@ -30,6 +29,10 @@
 			{
 				"command": "aikeys.sendBoxPrompt",
 				"title": "AI-Keys: Search Prompt"
+			},
+			{
+				"command": "aikeys.listModels",
+				"title": "AI-Keys: Available Models"
 			}
 		],
 		"configuration": [
@@ -96,6 +99,12 @@
 				"command": "aikeys.sendLinePrompt",
 				"key": "ctrl+alt+/",
 				"mac": "cmd+alt+/",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "aikeys.listModels",
+				"key": "ctrl+alt+m",
+				"mac": "cmd+alt+m",
 				"when": "editorTextFocus"
 			}
 		]
