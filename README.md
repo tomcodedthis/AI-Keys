@@ -1,6 +1,6 @@
 # AI-Keys
 
-A VSCode extension to use and manage AI from varied sources.
+A VSCode extension to use and manage generative AI from varied sources.
 
 Keep control of your keys, usage and costs directly to the model provider.
 
@@ -8,27 +8,49 @@ Keep control of your keys, usage and costs directly to the model provider.
 
 ## Features
 
-**Inline**
-Focus your prompt line, then press `CMD/CTRL + Shift + ?`
+### List Models
 
-**Input Box**
-`CMD/CTRL + Shift + P` and search for `AI-Keys: Search Prompt`
+`CMD/CTRL + ALT + M`
 
-Specify model (default is customizable):
+### Input Box Search
 
-```python
+`CMD/CTRL + Shift + P`
+
+Search for `AI-Keys: Search Prompt`
+
+### Inline Search
+
+Focus your prompt line
+
+`CMD/CTRL + Shift + ?`
+
+### Default Model
+
+```md
+what is ai?
+```
+
+### Specific Default Model
+
+```md
 gbt tell a joke
 ```
 
-```python
-codex write a function that adds 2 numbers
+### Any Available Model
+
+```md
+code-search-ada-code-001 write a function that adds 2 numbers
 ```
 
-```python
+### Image Generation
+
+```md
 dalle an image of a smiling dog
 ```
 
-- Shorthand configuration (convert / optimise / explain):
+### Configuration Arguments
+
+#### convert
 
 ```python
 cv javascript def add(x, y) return x + y
@@ -38,6 +60,8 @@ cv javascript def add(x, y) return x + y
 #   return x + y
 ```
 
+#### optimise/optimize
+
 ```typescript
 op def add(x, y) return x + y
 
@@ -46,6 +70,8 @@ op def add(x, y) return x + y
 //   return x + y
 // }
 ```
+
+#### explain
 
 ```python
 ex def add(x, y) return x + y
@@ -61,10 +87,14 @@ ex def add(x, y) return x + y
 
 Multiline prompts are currently only supported for **comments**
 
-**Setup**
-`CMD/CTRL + Shift + P` and search for `AI-Keys: Open Settings`
+### Setup
+
+`CMD/CTRL + Shift + P`
+
+Search for `AI-Keys: Open Settings`
 
 - Set API Keys and default configuration:
+  
 ![AI-Keys Settings](https://github.com/tomcodedthis/AI-Keys/blob/main/images/aikeys-settings.png?raw=true)
 
 ---
@@ -76,14 +106,19 @@ Multiline prompts are currently only supported for **comments**
 | Codex  | `codex` | `codex write a function that sums an array of numbers` |
 | DALL·E | `dalle` | `dalle a smiling dog` |
 
-| Argumment | Examples | Description
+---
+
+| Argumment | Examples | Description |
 | ---------- | ----------- | -------- |
 | optimise/ze | `optimise` / `gbt3 op` | Optimise prompt |
 | convert | `cv python` / `codex cv typescript` | Convert prompt to specified language |
 | explain | `explain` / `gbt3 ex` | Explain prompt |
+
 ---
 
 ## Requirements
+
+An active text editor to read and write to.
 
 Atleast one API key from our supported AI providers:
 
@@ -100,6 +135,7 @@ DALL·E (imgage-generation: higher-cost)
 - `aikeys.goToSettings`: Open extension settings
 - `aikeys.sendLinePrompt`: Send prompts from inline active editor
 - `aikeys.sendBoxPrompt`: Send prompts from VSCode input box
+- `aikeys.listModels`: List all available models
 
 ---
 

@@ -12,13 +12,7 @@
 		"curly": "off",
 		"eqeqeq": "warn",
 		"no-throw-literal": "warn",
-		"semi": "off",
-		"brace-style": [
-			"error",
-			"stroustrup",
-			{
-				"allowSingleLine": true
-			}
+		"semi": "off"
 		]
 	},
 	"ignorePatterns": ["out", "dist", "**/*.d.ts"]
