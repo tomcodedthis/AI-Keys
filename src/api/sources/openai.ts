@@ -13,6 +13,9 @@ export async function openaiRequest(aiName: string, prompt: PromptConfig) {
 	const key = config.get("openai") as string
 
 	if (!validKey(key)) return
+	if (!aiName) return
+
+	log(`Your final prompt: ${prompt.text}\nSent to: ${aiName}`)
 
 	const openai = processAPI(key) as OpenAIApi
 	const req: OpenAIRequest = {
@@ -26,12 +29,8 @@ export async function openaiRequest(aiName: string, prompt: PromptConfig) {
 		stream: false,
 	}
 
-	if (req.model === "codex") {
-		req.temperature = req.temperature / 2
-	}
-
-	if (aiName.toLowerCase() === "dalle") {
-		return await imageRequest(openai, prompt.text, aiName.toLowerCase())
+	if (aiName === "dalle") {
+		return await imageRequest(openai, prompt.text, aiName)
 	}
 
 	return await textRequest(openai, req, aiName, prompt.nextLine)
@@ -54,17 +53,26 @@ export async function textRequest(openai: OpenAIApi, req: OpenAIRequest, aiName:
 					const editor = vscode.window.activeTextEditor as vscode.TextEditor
 					const res = response.data.choices[0].text as string
 					const comment = getComment()
+					let lineLength = 0
+					
 					const text = res.split("").slice(1).map((letter) => {
-						return letter == `\n` ? (letter += `${comment} `) : letter
+						lineLength += letter.length
+
+						if (lineLength > 80 && letter === " ") {
+							letter = `\n${comment} `
+							lineLength = 0
+						}
+
+						return letter === `\n` ? `${letter}${comment} ` : letter
 					})
 
 					editor.edit((editBulder) => {
-						editBulder.insert(new vscode.Position(nextLine, 0), `${comment} ${text.join("")}\n`)
+						editBulder.insert(new vscode.Position(nextLine, 0), `\n${comment} ${text.join("")}\n`)
 					})
 				})
 				.catch((err) => {
 					notif(`OpenAI Response: ${err.response.data.error.message}`, 20)
-					processError(err.response.status, req)
+					processError(err.status, req)
 				})
 		}
 	)
