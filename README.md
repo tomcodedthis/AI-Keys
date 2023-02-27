@@ -10,41 +10,49 @@ Keep control of your keys, usage and costs directly to the model provider.
 
 ## Features
 
-### Inline
-
-Focus your prompt line, then press `CMD/CTRL + Shift + ?`
-
-### Input Box
-
-`CMD/CTRL + Shift + P` and search for `AI-Keys: Search Prompt`
-
 ### List Models
 
-`CMD/CTRL + ALT + M` to show all available models.
+`CMD/CTRL + ALT + M`
 
-Default model, send prompt:
+### Input Box Search
+
+`CMD/CTRL + Shift + P`
+
+Search for `AI-Keys: Search Prompt`
+
+### Inline Search
+
+Focus your prompt line
+
+`CMD/CTRL + Shift + ?`
+
+### Default Model
 
 ```md
 what is ai?
 ```
 
-Specific model, including fine-tuned:
+### Specific Default Model
 
 ```md
 gbt tell a joke
 ```
 
+### Any Available Model
+
 ```md
 code-search-ada-code-001 write a function that adds 2 numbers
 ```
+
+### Image Generation
 
 ```md
 dalle an image of a smiling dog
 ```
 
-Add configuration arguments:
+### Configuration Arguments
 
-**convert:**
+#### convert
 
 ```python
 cv javascript def add(x, y) return x + y
@@ -54,7 +62,7 @@ cv javascript def add(x, y) return x + y
 #   return x + y
 ```
 
-**optimise/optimize:**
+#### optimise/optimize
 
 ```typescript
 op def add(x, y) return x + y
@@ -65,7 +73,7 @@ op def add(x, y) return x + y
 // }
 ```
 
-**explain:**
+#### explain
 
 ```python
 ex def add(x, y) return x + y
@@ -81,8 +89,11 @@ ex def add(x, y) return x + y
 
 Multiline prompts are currently only supported for **comments**
 
-**Setup**
-`CMD/CTRL + Shift + P` and search for `AI-Keys: Open Settings`
+### Setup
+
+`CMD/CTRL + Shift + P`
+
+Search for `AI-Keys: Open Settings`
 
 - Set API Keys and default configuration:
   

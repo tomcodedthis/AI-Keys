@@ -1,6 +1,5 @@
 import { ARGS_SUPPORTED, MODELS_DEFAULT, MODEL_DEFAULT } from "../../utils/defaults"
 import { PromptConfig } from "../../utils/types"
-import { log } from "../../utils/utils"
 import { getArg, getModel } from "../process/get"
 import { getModels } from "../sources/models"
 import { openaiRequest } from "../sources/openai"
