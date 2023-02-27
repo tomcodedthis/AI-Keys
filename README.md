@@ -134,6 +134,10 @@ Features currently being worked on:
 
 ## Release Notes
 
-### 0.0.1
+### 0.0.1-0.0.2
 
 Initial release of AIKeys
+
+### 0.0.3
+
+Support for fine-tuned models
