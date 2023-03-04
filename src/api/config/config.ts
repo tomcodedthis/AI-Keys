@@ -1,7 +1,7 @@
 import { ARGS_SUPPORTED, MODELS_DEFAULT, MODEL_DEFAULT } from "../../utils/defaults"
 import { PromptConfig } from "../../utils/types"
 import { getArg, getModel } from "../process/get"
-import { clarifyRequest } from "../sources/clarify"
+import { clarifaiRequest } from "../sources/clarifai"
 import { getModels } from "../sources/models"
 import { openaiRequest } from "../sources/openai"
 
@@ -27,8 +27,8 @@ export async function config(prompt: PromptConfig) {
 		prompt.text = getArg(promptArray, prompt.text)
 	}
 
-	if (model == "clarify") {
-		await clarifyRequest()
+	if (model == "clarifai") {
+		await clarifaiRequest()
 		return
 	}
 

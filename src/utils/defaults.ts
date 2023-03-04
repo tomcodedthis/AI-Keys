@@ -32,5 +32,5 @@ export const MODELS_DEFAULT: {[key: string]: string} = {
 	"gbt3": "gpt-3.5-turbo",
 	"codex": "code-davinci-002",
 	"dalle": "dalle",
-	"clarify": "clarify"
+	"clarifai": "clarifai"
 }
