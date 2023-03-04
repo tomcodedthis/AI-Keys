@@ -33,7 +33,7 @@ export const getComment = () => {
 	return "//"
 }
 
-export function getModel(promptArray: string[], fullList: string[]) {
+export function getModel(promptArray: string[], fullList = [""]) {
 	let model = ""
 	
 	promptArray.some(word => {

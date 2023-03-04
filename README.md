@@ -31,6 +31,7 @@ CMD/CTRL + ALT + M
 ```md
 Specify Model (no argument defaults to user-defined default):
 
+
 gbt tell a joke
 
 code-search-ada-code-001 write a function that adds 2 numbers
@@ -101,7 +102,7 @@ AI-Keys: Open Settings
             <td rowspan=2>GBT</td>
             <td>gbt</td>
             <td rowspan=2>Text</td>
-            <td rowspan=2><a href="https://openai.com/pricing#language-models">See here</a></td>
+            <td rowspan=2><a href="https://openai.com/pricing#language-models">See more</a></td>
         </tr>
         <tr>
             <td>gbt3</td>
@@ -116,7 +117,17 @@ AI-Keys: Open Settings
             <td>DALL·E</td>
             <td>dalle</td>
             <td>Image</td>
-            <td><a href="https://openai.com/pricing#image-models">See here</a></td>
+            <td><a href="https://openai.com/pricing#image-models">See more</a></td>
+        </tr>
+        <tr>
+            <td rowspan=2><a href="https://www.clarifai.com/">Clarifai</a></td>
+            <td rowspan=2>Clarifai</td>
+            <td rowspan=2>clarifai</td>
+            <td rowspan=2>Image Recognition</td>
+            <td>1,000 Free Operations Per/Month</td>
+        </tr>
+        <tr>
+            <td><a href="https://www.clarifai.com/pricing">See more</a></td>
         </tr>
     </tbody>
 </table>
@@ -131,6 +142,8 @@ An active text editor to read and write to.
 At least one API key from our supported AI sources:
 
 ### [OpenAI](https://platform.openai.com/account/api-keys)
+
+### [Clarifai](https://docs.clarifai.com/clarifai-basics/authentication/personal-access-tokens/)
 
 ---
 
@@ -147,9 +160,9 @@ At least one API key from our supported AI sources:
 
 Features currently being worked on:
 
-- More providers
-- Storing secret API keys
-- More configuration
+1. More providers
+2. Storing secret API keys
+3. More configuration
 
 ## To-Do
 

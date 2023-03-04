@@ -28,8 +28,8 @@ export const ARGS_SUPPORTED = {
 }
 export const CONVERT_DEFAULT = "javascript"
 export const MODELS_DEFAULT: {[key: string]: string} = {
-	"gbt": "gpt-3.5-turbo",
-	"gbt3": "gpt-3.5-turbo",
+	"gbt": "code-davinci-003",
+	"gbt3": "code-davinci-003",
 	"codex": "code-davinci-002",
 	"dalle": "dalle",
 	"clarifai": "clarifai"

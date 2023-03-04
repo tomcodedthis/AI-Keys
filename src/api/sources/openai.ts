@@ -70,9 +70,9 @@ export async function textRequest(openai: OpenAIApi, req: OpenAIRequest, aiName:
 						editBulder.insert(new vscode.Position(nextLine, 0), `\n${comment} ${text.join("")}\n`)
 					})
 				})
-				.catch((err) => {
-					notif(`OpenAI Response: ${err.response.data.error.message}`, 20)
-					processError(err.status, req)
+				.catch((error) => {
+					notif(`OpenAI Error: ${error.response.data.error.message}`, 20)
+					processError(error.status, req)
 				})
 		}
 	)
@@ -99,17 +99,17 @@ export async function imageRequest(openai: OpenAIApi, prompt: string, aiName: st
 					const comment = getComment()
 
 					await download(res, prompt).then(() => {
+						notif(`Here's your ${aiName.toUpperCase()} image` as string, 5)
+						log("AI-Keys: Response Success")
+
 						editor.edit((line) => {
 							line.insert(editor.selection.end, `\n\n${comment} Image URL link:\n${comment} ${res}`)
 						})
-
-						notif(`Here's your ${aiName.toUpperCase()} image` as string, 5)
-						log("AI-Keys: Response Success")
 					})
 				})
 				.catch((err) => {
 					processError(err.response.status, req)
-					notif("OpenAI Response: " + err.response.data.error.message, 20)
+					notif("OpenAI Error: " + err.response.data.error.message, 20)
 					log(err.response)
 				})
 		}

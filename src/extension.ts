@@ -8,7 +8,7 @@ import { go, log, notif } from "./utils/utils"
 import { listModels } from "./api/sources/models"
 
 export function activate(context: vscode.ExtensionContext) {
-	log("AIKeys: Actived")
+	log("AIKeys: Activated")
 
 	const settings = vscode.commands.registerCommand("aikeys.goToSettings", () => {
 		notif("Opening settings", 5, "none")

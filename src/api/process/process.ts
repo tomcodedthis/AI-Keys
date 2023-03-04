@@ -67,3 +67,11 @@ export function uncomment(prompt: string) {
 
 	return prompt
 }
+
+export function removeArg(argArray: string[], prompt: string) {
+	return prompt
+		.split(" ")
+		.filter(word => { return !argArray.some(arg => word !== arg) })
+		.join(" ")
+		.trim()
+}
