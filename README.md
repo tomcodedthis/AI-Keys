@@ -76,7 +76,7 @@ dalle a smiling dog
 ```md
 Image Recognition (URL's must use HTTPS and local images use absolute paths):
 
-clarify https://samples.clarifai.com/dog2.jpeg
+clarifai https://samples.clarifai.com/dog2.jpeg
 
 clar /absolute/path/to/local/image.jpeg
 ```

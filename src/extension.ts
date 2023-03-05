@@ -25,6 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		config(prompt)
 	})
+	
 
 	const sendBoxPrompt = vscode.commands.registerCommand("aikeys.sendBoxPrompt", async () => {
 		if (!activeEditor()) return
