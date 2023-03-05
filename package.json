@@ -7,7 +7,7 @@
 	"repository": {
 		"url": "https://github.com/tomcodedthis/AI-Keys"
 	},
-	"version": "0.0.7",
+	"version": "0.0.9",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -144,7 +144,7 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run esbuild-base -- --minify",
+		"vscode:prepublish": "npm run compile",
 		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
@@ -171,12 +171,8 @@
 		"typescript": "^4.9.5"
 	},
 	"dependencies": {
-		"@grpc/grpc-js": "^1.8.11",
-		"@grpc/proto-loader": "^0.7.5",
 		"clarifai-nodejs-grpc": "^8.0.0",
-		"google-protobuf": "^3.21.2",
 		"openai": "^3.1.0",
-		"protobufjs": "^7.2.2",
 		"title-case": "^3.0.3"
 	}
 }
