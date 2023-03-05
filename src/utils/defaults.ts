@@ -37,6 +37,6 @@ export const MODELS_DEFAULT: { [key: string]: string } = {
 	gbt3: "text-davinci-003",
 	codex: "code-davinci-002",
 	dalle: "dalle",
-	clarifai: "clarifai",
-	clar: "clarifai",
+	// clarifai: "clarifai",
+	// clar: "clarifai",
 }
