@@ -50,9 +50,7 @@ Add Shorthand Arguments (multiline prompts are only supported as comments):
 cv javascript def add(x, y) return x + y
 
 # convert javascript
-
-# def add(x, y):
-
+# def add(x, y)
 # return x + y
 
 op def add(x, y) return x + y
@@ -65,9 +63,7 @@ op def add(x, y) return x + y
 ex def add(x, y) return x + y
 
 # explain
-
 # def add(x, y):
-
 # return x + y`
 ```
 
