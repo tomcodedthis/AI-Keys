@@ -33,7 +33,7 @@ export const getComment = () => {
 	const language = getLanguage()
 
 	for (const [key, value] of Object.entries(COMMENT_SYMBOLS)) {
-		if (key == language) return value
+		if (key === language) return value
 	}
 
 	return "//"

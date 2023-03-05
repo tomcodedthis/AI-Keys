@@ -50,9 +50,7 @@ Add Shorthand Arguments (multiline prompts are only supported as comments):
 cv javascript def add(x, y) return x + y
 
 # convert javascript
-
-# def add(x, y):
-
+# def add(x, y)
 # return x + y
 
 op def add(x, y) return x + y
@@ -65,9 +63,7 @@ op def add(x, y) return x + y
 ex def add(x, y) return x + y
 
 # explain
-
 # def add(x, y):
-
 # return x + y`
 ```
 
@@ -80,7 +76,7 @@ dalle a smiling dog
 ```md
 Image Recognition (URL's must use HTTPS and local images use absolute paths):
 
-clarify https://samples.clarifai.com/dog2.jpeg
+clarifai https://samples.clarifai.com/dog2.jpeg
 
 clar /absolute/path/to/local/image.jpeg
 ```

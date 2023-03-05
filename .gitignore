@@ -2,5 +2,7 @@ out
 dist
 node_modules
 .vscode-test/
+old-versions
 *.vsix
 vsc-extension-quickstart.md
+.vscode
