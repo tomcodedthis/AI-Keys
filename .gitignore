@@ -4,4 +4,3 @@ node_modules
 .vscode-test/
 *.vsix
 vsc-extension-quickstart.md
-src/api/sources/clarifai.ts

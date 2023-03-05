@@ -8,6 +8,11 @@
 
 - Initial release
 
-## 0.0.3
+## 0.0.3 - 0.0.4
 
-- Support for fine tuned models
+- Support for OpenAI's fine tuned models
+
+## 0.0.5
+
+- Added Clarifai as a model provider
+- Support for Image Recognition

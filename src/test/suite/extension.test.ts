@@ -6,10 +6,8 @@
 // test: wrong api key *
 // test: no comment *
 
-
 // test: default model *
 // say hello
-
 
 // test: change model *
 // codex say hello
@@ -18,10 +16,8 @@
 
 // gbt say hello
 
-
 // test: image *
 // dalle a smiling dog
-
 
 //--- to-do: add support for multiline prompts that aren't comments ---//
 // test: arguments *
@@ -38,8 +34,17 @@
 // def add(x, y):
 // 	return x + y
 
-
 // test: list models, add pre-prompt *
 
 // ctrl/cmd + alt + m
 // what is ai?
+
+// test: clarifai *
+
+// no api key
+// wrong api key
+// image URL
+// local image
+// wrong url
+// wrong local image
+// prefix

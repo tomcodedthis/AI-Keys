@@ -4,6 +4,14 @@ A VSCode extension to use and manage generative AI from varied sources.
 
 Keep control of your keys, usage and costs directly to the model provider.
 
+- [Features with Examples](https://github.com/tomcodedthis/AI-Keys#features-with-examples)
+- [Setup](https://github.com/tomcodedthis/AI-Keys#setup)
+- [Requirements](https://github.com/tomcodedthis/AI-Keys#requirements)
+- [Extension Commands](https://github.com/tomcodedthis/AI-Keys#extension-commands)
+- [In-Development](https://github.com/tomcodedthis/AI-Keys#in-development)
+- [To-Do](https://github.com/tomcodedthis/AI-Keys#to-do)
+- [Known Issues](https://github.com/tomcodedthis/AI-Keys#known-issues)
+
 ---
 
 ## Features with Examples
@@ -23,14 +31,13 @@ AI-Keys: Search Prompt
 ```
 
 ```md
-List Models:
+List Supported Models:
 
 CMD/CTRL + ALT + M
 ```
 
 ```md
 Specify Model (no argument defaults to user-defined default):
-
 
 gbt tell a joke
 
@@ -40,33 +47,42 @@ code-search-ada-code-001 write a function that adds 2 numbers
 ```md
 Add Shorthand Arguments (multiline prompts are only supported as comments):
 
-
 cv javascript def add(x, y) return x + y
 
-# convert javascript 
-# def add(x, y):
-#   return x + y
+# convert javascript
 
+# def add(x, y):
+
+# return x + y
 
 op def add(x, y) return x + y
 
 // optimise
 // function add(x, y) {
-//   return x + y
+// return x + y
 // }
-
 
 ex def add(x, y) return x + y
 
 # explain
+
 # def add(x, y):
-#   return x + y`
+
+# return x + y`
 ```
 
 ```md
 Image Generation:
 
 dalle a smiling dog
+```
+
+```md
+Image Recognition (URL's must use HTTPS and local images use absolute paths):
+
+clarify https://samples.clarifai.com/dog2.jpeg
+
+clar /absolute/path/to/local/image.jpeg
 ```
 
 ---
@@ -80,8 +96,6 @@ CMD/CTRL + Shift + P
 
 AI-Keys: Open Settings
 ```
-  
-![AI-Keys Settings](https://github.com/tomcodedthis/AI-Keys/blob/main/images/aikeys-settings.png?raw=true)
 
 ---
 
@@ -122,11 +136,12 @@ AI-Keys: Open Settings
         <tr>
             <td rowspan=2><a href="https://www.clarifai.com/">Clarifai</a></td>
             <td rowspan=2>Clarifai</td>
-            <td rowspan=2>clarifai</td>
+            <td>clarifai</td>
             <td rowspan=2>Image Recognition</td>
             <td>1,000 Free Operations Per/Month</td>
         </tr>
         <tr>
+            <td>clar</td>
             <td><a href="https://www.clarifai.com/pricing">See more</a></td>
         </tr>
     </tbody>
@@ -147,7 +162,7 @@ At least one API key from our supported AI sources:
 
 ---
 
-## Extension Settings
+## Extension Commands
 
 - `aikeys.goToSettings`: Open extension settings
 - `aikeys.sendLinePrompt`: Send prompts from inline active editor
@@ -160,9 +175,10 @@ At least one API key from our supported AI sources:
 
 Features currently being worked on:
 
-1. More providers
-2. Storing secret API keys
-3. More configuration
+1. Storing secret API keys
+2. Support for any Clarifai model (audio, text)
+3. More providers
+4. More configuration
 
 ## To-Do
 

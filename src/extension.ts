@@ -5,7 +5,7 @@ import { PromptConfig } from "./utils/types"
 import { processLine } from "./api/process/process"
 import { activeEditor } from "./api/process/check"
 import { go, log, notif } from "./utils/utils"
-import { listModels } from "./api/sources/models"
+import { listModels } from "./api/providers/models"
 
 export function activate(context: vscode.ExtensionContext) {
 	log("AIKeys: Activated")
@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const settings = vscode.commands.registerCommand("aikeys.goToSettings", () => {
 		notif("Opening settings", 5, "none")
 		log("AI-Keys: Opening settings")
-		go("none")
+		go("none", true)
 	})
 
 	const sendLinePrompt = vscode.commands.registerCommand("aikeys.sendLinePrompt", async () => {
@@ -35,12 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 		await listModels()
 	})
 
-	context.subscriptions.push(
-		settings,
-		sendLinePrompt,
-		sendBoxPrompt,
-		showModels
-	)
+	context.subscriptions.push(settings, sendLinePrompt, sendBoxPrompt, showModels)
 }
 
 export function deactivate() {
