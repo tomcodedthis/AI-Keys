@@ -5,13 +5,12 @@ import * as path from "path"
 import { IMAGE_FORMAT_DEFAULT } from "./defaults"
 import { getComment } from "../api/process/get"
 
-export function go(setting: string, user = false) {
-	vscode.commands.executeCommand(
-		"workbench.action.openSettings",
-		`${setting === "none" ? "aikeys" : setting}`
-	).then(() => {
-		if (!user) vscode.commands.executeCommand("workbench.action.openWorkspaceSettings")
-	})
+export function go(setting: string, user = true) {
+	vscode.commands
+		.executeCommand("workbench.action.openSettings", `${setting === "none" ? "aikeys" : setting}`)
+		.then(() => {
+			if (!user) vscode.commands.executeCommand("workbench.action.openWorkspaceSettings")
+		})
 }
 
 export function log(text: unknown) {
@@ -78,7 +77,10 @@ export async function download(url: string, prompt: string) {
 
 		fileStream.on("finish", () => {
 			editor.edit((line) => {
-				line.insert(editor.selection.end, `\n${comment}\n${comment} Image downloaded here:\n${comment} ${filePath}\n`)
+				line.insert(
+					editor.selection.end,
+					`\n${comment}\n${comment} Image downloaded here:\n${comment} ${filePath}\n`
+				)
 			})
 
 			log("AI-Keys: Image download success")

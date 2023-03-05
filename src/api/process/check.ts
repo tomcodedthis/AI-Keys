@@ -1,4 +1,5 @@
 import * as vscode from "vscode"
+import * as fs from "fs"
 import { log, notif } from "../../utils/utils"
 import { getComment } from "./get"
 
@@ -43,10 +44,19 @@ export const validKey = (key: string) => {
 	return true
 }
 
+export const validImage = (prompt: string) => {
+	if (prompt.startsWith("https")) return true
+	if (fs.existsSync(prompt)) return true
+
+	notif(
+		"AI-Keys: Unable to process image, check your prompt. URL's require using HTTPS. Local images require absolute paths",
+		20
+	)
+	return false
+}
+
 export const isComment = (text: string) => {
 	const comment = getComment()
 
-	return text.split(" ")[0] === comment 
-		? true
-		: false
+	return text.split(" ")[0] === comment ? true : false
 }

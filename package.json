@@ -7,7 +7,7 @@
 	"repository": {
 		"url": "https://github.com/tomcodedthis/AI-Keys"
 	},
-	"version": "0.0.3",
+	"version": "0.0.5",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -41,39 +41,45 @@
 				"properties": {
 					"AI-Keys.keys": {
 						"type": "object",
-						"description": "Define your API Keys",
+						"description": "Define your API Keys.",
 						"properties": {
 							"openai": {
+								"type": "string"
+							},
+							"clarifai": {
 								"type": "string"
 							}
 						},
 						"default": {
-							"openai": ""
+							"openai": "",
+							"clarifai": ""
 						}
 					},
-					"AI-Keys.model": {
+					"AI-Keys.defaultModel": {
 						"type": "string",
-						"description": "Choose default your AI Model",
-						"default": "GBT3",
+						"description": "Choose the model to use when a prompt doesn't pass a model as argument.",
+						"default": "GBT",
 						"enum": [
-							"GBT3",
+							"GBT",
 							"Codex",
-							"DALLE"
+							"DALLE",
+							"Clarifai"
 						],
 						"enumDescriptions": [
-							"Low-Cost: Text-generation from OpenAI",
-							"Free: Code-generation from OpenAI",
-							"Low-Cost: Image-generation from OpenAI"
+							"Low-Cost Text Generation",
+							"Free Code Generation",
+							"Low-Cost Image Generation",
+							"Free/Low-Cost Image Recognition"
 						]
 					},
-					"AI-Keys.maxTokens": {
+					"AI-Keys.openAI.maxTokens": {
 						"type": "number",
-						"description": "Set your max token response (1 token = 1 character)",
-						"default": 100
+						"description": "Set your max token response (1 token = 1 character).",
+						"default": 256
 					},
 					"AI-Keys.prefix": {
 						"type": "string",
-						"description": "Add an optional preffix to start your prompt",
+						"description": "Add a preffix to start your prompt (Framework / Library / Topic).",
 						"default": ""
 					},
 					"AI-Keys.imageFormat": {
@@ -83,12 +89,40 @@
 						"enum": [
 							"webp",
 							"jpg",
+							"jpeg",
 							"png"
 						],
 						"enumDescriptions": [
 							"webp",
 							"jpg",
+							"jpeg",
 							"png"
+						]
+					},
+					"AI-Keys.imageResolution": {
+						"type": "string",
+						"description": "Choose the resolution of AI image generated.\n\nThe higher the resolution, the higher the cost.\n\nWINDOW NEEDS TO BE REFRESED TO TAKE EFFECT",
+						"default": "256x256",
+						"enum": [
+							"256x256",
+							"512x512",
+							"1024x1024"
+						],
+						"enumDescriptions": [
+							"256x256",
+							"512x512",
+							"1024x1024"
+						]
+					},
+					"AI-Keys.clarifai.modelType": {
+						"type": "string",
+						"description": "Choose which type of generative AI from Clarifai you're using.",
+						"default": "Image Recognition",
+						"enum": [
+							"Image Recognition"
+						],
+						"enumDescriptions": [
+							"Returns the top-10 concepts and probability of what an image contains."
 						]
 					}
 				}
@@ -121,6 +155,7 @@
 	},
 	"devDependencies": {
 		"@types/glob": "^8.0.0",
+		"@types/google-protobuf": "^3.15.6",
 		"@types/mocha": "^10.0.1",
 		"@types/node": "16.x",
 		"@types/vscode": "^1.74.0",
@@ -136,7 +171,7 @@
 		"typescript": "^4.9.5"
 	},
 	"dependencies": {
-		"node-fetch": "^3.3.0",
+		"clarifai-nodejs-grpc": "^8.0.0",
 		"openai": "^3.1.0",
 		"title-case": "^3.0.3"
 	}
