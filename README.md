@@ -19,6 +19,10 @@ Keep control of your keys, usage and costs directly to the model provider.
 ```md
 Inline Search:
 
+CMD/CTRL + Enter
+
+or
+
 CMD/CTRL + Alt + /
 ```
 
@@ -73,6 +77,14 @@ Image Generation:
 dalle a smiling dog
 ```
 
+```md
+Image Recognintion:
+
+clarifai https://samples.clarifai.com/dog2.jpeg
+
+clar /LOCAL/FILE/PATH/image.webp
+```
+
 ---
 
 ## Setup
@@ -121,7 +133,7 @@ AI-Keys: Open Settings
             <td>Image</td>
             <td><a href="https://openai.com/pricing#image-models">See more</a></td>
         </tr>
-        <!-- <tr>
+        <tr>
             <td rowspan=2><a href="https://www.clarifai.com/">Clarifai</a></td>
             <td rowspan=2>Clarifai</td>
             <td>clarifai</td>
@@ -131,7 +143,7 @@ AI-Keys: Open Settings
         <tr>
             <td>clar</td>
             <td><a href="https://www.clarifai.com/pricing">See more</a></td>
-        </tr> -->
+        </tr>
     </tbody>
 </table>
 <!-- markdownlint-restore -->
@@ -146,7 +158,7 @@ At least one API key from our supported AI sources:
 
 ### [OpenAI](https://platform.openai.com/account/api-keys)
 
-<!-- ### [Clarifai](https://docs.clarifai.com/clarifai-basics/authentication/personal-access-tokens/) -->
+### [Clarifai](https://docs.clarifai.com/clarifai-basics/authentication/personal-access-tokens/)
 
 ---
 

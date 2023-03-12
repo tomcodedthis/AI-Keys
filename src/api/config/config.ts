@@ -2,7 +2,7 @@ import { ARGS_SUPPORTED, MODELS_DEFAULT, MODEL_DEFAULT } from "../../utils/defau
 import { PromptConfig } from "../../utils/types"
 import { getArg, getModel } from "../process/get"
 import { processArg, removeArg } from "../process/process"
-// import { clarifaiRequest } from "../providers/clarifai"
+import { clarifaiRequest } from "../providers/clarifai"
 import { getModels } from "../providers/models"
 import { openaiRequest } from "../providers/openai"
 
@@ -21,17 +21,17 @@ export async function config(prompt: PromptConfig) {
 		prompt.text = removeArg(models, prompt.text)
 	}
 
-	// if (model === "clarifai") {
-	// 	if (supportedArg(argArray)) {
-	// 		let args: string[] = []
-	// 		Object.values(ARGS_SUPPORTED).forEach((array) => (args = args.concat(array)))
+	if (model === "clarifai") {
+		if (supportedArg(argArray)) {
+			let args: string[] = []
+			Object.values(ARGS_SUPPORTED).forEach((array) => (args = args.concat(array)))
 
-	// 		prompt.text = removeArg(args, prompt.text)
-	// 	}
+			prompt.text = removeArg(args, prompt.text)
+		}
 
-	// 	await clarifaiRequest(prompt.text)
-	// 	return
-	// }
+		await clarifaiRequest(prompt.text)
+		return
+	}
 
 	if (supportedArg(argArray)) {
 		const arg = getArg(argArray)

@@ -21,3 +21,10 @@ export interface PromptConfig {
 	text: string
 	nextLine: number
 }
+
+export interface clarifaiRequest {
+	key: string,
+	userID: string,
+	modelID: string,
+	appID: string
+}

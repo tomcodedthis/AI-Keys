@@ -7,7 +7,7 @@
 	"repository": {
 		"url": "https://github.com/tomcodedthis/AI-Keys"
 	},
-	"version": "0.0.11",
+	"version": "0.0.12",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -124,6 +124,11 @@
 						"enumDescriptions": [
 							"Returns the top-10 concepts and probability of what an image contains."
 						]
+					},
+					"AI-Keys.clarifai.modelID": {
+						"type": "string",
+						"description": "Specify the model ID to use for your Clarifai requests.",
+						"default": "aaa03c23b3724a16a56b629203edc62c"
 					}
 				}
 			}
@@ -133,6 +138,12 @@
 				"command": "aikeys.sendLinePrompt",
 				"key": "ctrl+alt+/",
 				"mac": "cmd+alt+/",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "aikeys.sendLinePrompt",
+				"key": "ctrl+enter",
+				"mac": "cmd+enter",
 				"when": "editorTextFocus"
 			},
 			{
@@ -157,6 +168,7 @@
 		"@types/glob": "^8.0.0",
 		"@types/mocha": "^10.0.1",
 		"@types/node": "16.x",
+		"@types/request": "^2.48.8",
 		"@types/vscode": "^1.74.0",
 		"@typescript-eslint/eslint-plugin": "^5.52.0",
 		"@typescript-eslint/parser": "^5.52.0",
@@ -171,6 +183,7 @@
 	},
 	"dependencies": {
 		"openai": "^3.1.0",
+		"request": "^2.88.2",
 		"title-case": "^3.0.3"
 	}
 }
