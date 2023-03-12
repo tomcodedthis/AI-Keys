@@ -10,6 +10,7 @@ export const MAX_TOKENS_DEFAULT = vscode.workspace.getConfiguration("AI-Keys.ope
 
 // Clarifai
 export const MODEL_TYPE_DEFAULT = vscode.workspace.getConfiguration("AI-Keys").get("clarifai.modelType") as string
+export const MODEL_ID_DEFAULT = vscode.workspace.getConfiguration("AI-Keys").get("clarifai.modelID") as string
 
 // to-do: add these as vscode.workspace configuration
 export const TEMP_DEFAULT = 0
@@ -37,6 +38,6 @@ export const MODELS_DEFAULT: { [key: string]: string } = {
 	gbt3: "text-davinci-003",
 	codex: "code-davinci-002",
 	dalle: "dalle",
-	// clarifai: "clarifai",
-	// clar: "clarifai",
+	clarifai: "clarifai",
+	clar: "clarifai",
 }
