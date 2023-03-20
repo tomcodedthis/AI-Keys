@@ -63,3 +63,5 @@ export function supportedArg(promptArray: string[]) {
 		return true
 	return false
 }
+
+// say hello

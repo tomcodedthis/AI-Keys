@@ -26,3 +26,7 @@
 - Added Clarifai as a model provider
 - Support for Image Recognition
 - `CMD/CTRL + Enter` as inline search shortcut
+
+## 0.0.13
+
+- Spellcheck tweaks and dark icon
