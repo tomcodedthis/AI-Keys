@@ -14,6 +14,22 @@ Keep control of your keys, usage and costs directly to the model provider.
 
 ---
 
+## New Features
+
+```md
+Image Recognintion:
+
+clarifai https://samples.clarifai.com/dog2.jpeg
+
+clar /LOCAL/FILE/PATH/image.webp
+```
+
+```md
+Image Generation:
+
+dalle a smiling dog
+```
+
 ## Features with Examples
 
 ```md
@@ -27,11 +43,11 @@ CMD/CTRL + Alt + /
 ```
 
 ```md
-Input Box Search:
+Specify Model ( optional, unspecified uses default model ):
 
-CMD/CTRL + Shift + P
+gpt tell a joke
 
-AI-Keys: Search Prompt
+code-search-ada-code-001 write a function that adds 2 numbers
 ```
 
 ```md
@@ -41,48 +57,32 @@ CMD/CTRL + ALT + M
 ```
 
 ```md
-Specify Model (no argument defaults to user-defined default):
+Shorthand Arguments (multiline prompts are only supported as comments):
 
-gbt tell a joke
-
-code-search-ada-code-001 write a function that adds 2 numbers
-```
-
-```md
-Add Shorthand Arguments (multiline prompts are only supported as comments):
-
-cv javascript def add(x, y) return x + y
-
-# convert javascript
-# def add(x, y)
+convert / cv
+# cv javascript
+# def add(x, y):
 # return x + y
 
-op def add(x, y) return x + y
 
-// optimise
+optimise / op
+// op
 // function add(x, y) {
 // return x + y
 // }
 
-ex def add(x, y) return x + y
-
-# explain
+explain / ex
+# ex
 # def add(x, y):
 # return x + y`
 ```
 
 ```md
-Image Generation:
+Input Box Search:
 
-dalle a smiling dog
-```
+CMD/CTRL + Shift + P
 
-```md
-Image Recognintion:
-
-clarifai https://samples.clarifai.com/dog2.jpeg
-
-clar /LOCAL/FILE/PATH/image.webp
+AI-Keys: Search Prompt
 ```
 
 ---
@@ -113,13 +113,13 @@ AI-Keys: Open Settings
     <tbody>
         <tr>
             <td rowspan=4><a href="https://platform.openai.com/">OpenAI</a></td>
-            <td rowspan=2>GBT</td>
-            <td>gbt</td>
+            <td rowspan=2>GPT</td>
+            <td>gpt</td>
             <td rowspan=2>Text</td>
             <td rowspan=2><a href="https://openai.com/pricing#language-models">See more</a></td>
         </tr>
         <tr>
-            <td>gbt3</td>
+            <td>gpt3</td>
         </tr>
         <tr>
             <td>Codex</td>

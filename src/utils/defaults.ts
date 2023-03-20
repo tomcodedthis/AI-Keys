@@ -13,7 +13,7 @@ export const MODEL_TYPE_DEFAULT = vscode.workspace.getConfiguration("AI-Keys").g
 export const MODEL_ID_DEFAULT = vscode.workspace.getConfiguration("AI-Keys").get("clarifai.modelID") as string
 
 // to-do: add these as vscode.workspace configuration
-export const TEMP_DEFAULT = 0
+export const TEMP_DEFAULT = 0.6
 export const TOP_P_DEFAULT = 1
 export const FREQ_PEN_DEFAULT = 0
 export const PRES_PEN_DEFAULT = 0
@@ -34,8 +34,8 @@ export const ARGS_SUPPORTED = {
 }
 export const CONVERT_DEFAULT = "javascript"
 export const MODELS_DEFAULT: { [key: string]: string } = {
-	gbt: "text-davinci-003",
-	gbt3: "text-davinci-003",
+	gpt: "text-davinci-003",
+	gpt3: "text-davinci-003",
 	codex: "code-davinci-002",
 	dalle: "dalle",
 	clarifai: "clarifai",

@@ -41,6 +41,8 @@ export async function openaiRequest(aiName: string, prompt: PromptConfig) {
 		return await imageRequest(openai, prompt.text, aiName)
 	}
 
+	if (aiName === "codex") req.temperature = req.temperature / 2
+
 	return await textRequest(openai, req, aiName, prompt.nextLine)
 }
 

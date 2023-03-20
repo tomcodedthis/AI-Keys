@@ -7,7 +7,7 @@
 	"repository": {
 		"url": "https://github.com/tomcodedthis/AI-Keys"
 	},
-	"version": "0.0.12",
+	"version": "0.0.13",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -58,9 +58,9 @@
 					"AI-Keys.defaultModel": {
 						"type": "string",
 						"description": "Choose the model to use when a prompt doesn't pass a model as argument.",
-						"default": "GBT",
+						"default": "GPT3",
 						"enum": [
-							"GBT",
+							"GPT3",
 							"Codex",
 							"DALLE",
 							"Clarifai"
