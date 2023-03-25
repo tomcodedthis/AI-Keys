@@ -7,7 +7,7 @@
 	"repository": {
 		"url": "https://github.com/tomcodedthis/AI-Keys"
 	},
-	"version": "0.0.13",
+	"version": "0.0.14",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -33,6 +33,10 @@
 			{
 				"command": "aikeys.listModels",
 				"title": "AI-Keys: Available Models"
+			},
+			{
+				"command": "aikeys.clearChat",
+				"title": "AI-Keys: Reset GPT Chat"
 			}
 		],
 		"configuration": [
@@ -58,28 +62,44 @@
 					"AI-Keys.defaultModel": {
 						"type": "string",
 						"description": "Choose the model to use when a prompt doesn't pass a model as argument.",
-						"default": "GPT3",
+						"default": "GPT-3.5-TURBO",
 						"enum": [
-							"GPT3",
-							"Codex",
+							"GPT-3.5-TURBO",
+							"GPT-3",
 							"DALLE",
 							"Clarifai"
 						],
 						"enumDescriptions": [
-							"Low-Cost Text Generation",
-							"Free Code Generation",
-							"Low-Cost Image Generation",
-							"Free/Low-Cost Image Recognition"
+							"Chat Completion",
+							"Text Completion",
+							"Image Generation",
+							"Image Recognition"
 						]
 					},
 					"AI-Keys.openAI.maxTokens": {
 						"type": "number",
-						"description": "Set your max token response (1 token = 1 character).",
+						"description": "Set your max token response.\n\n1 Token = 1 Character",
 						"default": 256
+					},
+					"AI-Keys.openAI.system": {
+						"type": "string",
+						"description": "For GPT-3.5-Turbo and above, define the behavior of how GPT should respond.\n\ne.g. You are a helpful assistant",
+						"default": "You are a software engineer"
+					},
+					"AI-Keys.openAI.messages": {
+						"type": "array",
+						"description": "Your active chat log sent to GPT each request.\n\nClear this to reduce you token usage.",
+						"default": [],
+						"minItems": []
+					},
+					"AI-Keys.openAI.tokenWarn": {
+						"type": "number",
+						"description": "The limit at which to warn of a prompts token usage.",
+						"default": 1000
 					},
 					"AI-Keys.prefix": {
 						"type": "string",
-						"description": "Add a preffix to start your prompt (Framework / Library / Topic).",
+						"description": "Add a preffix to start your prompt.\n\ne.g. Framework / Library / Topic",
 						"default": ""
 					},
 					"AI-Keys.imageFormat": {
@@ -101,7 +121,7 @@
 					},
 					"AI-Keys.imageResolution": {
 						"type": "string",
-						"description": "Choose the resolution of AI image generated.\n\nThe higher the resolution, the higher the cost.\n\nWINDOW NEEDS TO BE REFRESED TO TAKE EFFECT",
+						"description": "Choose the resolution of AI image generated, higher resolustion typically results in a higher cost.\n\nWINDOW NEEDS TO BE REFRESED TO TAKE EFFECT",
 						"default": "256x256",
 						"enum": [
 							"256x256",
@@ -182,7 +202,7 @@
 		"typescript": "^4.9.5"
 	},
 	"dependencies": {
-		"openai": "^3.1.0",
+		"openai": "^3.2.1",
 		"request": "^2.88.2",
 		"title-case": "^3.0.3"
 	}

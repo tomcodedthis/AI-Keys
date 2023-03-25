@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import { validInput } from "../api/process/check"
-import { config } from "../api/config/config"
+import { config } from "../api/config"
 
 export async function showInputBox() {
 	const editor = vscode.window.activeTextEditor as vscode.TextEditor

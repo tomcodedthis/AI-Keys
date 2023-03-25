@@ -17,6 +17,21 @@ Keep control of your keys, usage and costs directly to the model provider.
 ## New Features
 
 ```md
+Chat using GPT-3.5-Turbo:
+
+write a joke
+
+think of a better one
+
+repeat the first one
+
+Reset chat (reduce token usage):
+
+clearChat
+
+```
+
+```md
 Image Recognintion:
 
 clarifai https://samples.clarifai.com/dog2.jpeg
@@ -177,18 +192,18 @@ Features currently being worked on:
 
 1. Storing secret API keys
 2. Support for any Clarifai model (audio, text)
-3. More providers
+3. Support for Hugging Face
 4. More configuration
 
 ## To-Do
 
 Contributions are widely encouraged, get involved to earn XP
 
+- Conversation window, animated character (if possible)
 - Write proper tests for pre-release checks
 - Stream response [info](https://github.com/openai/openai-node/issues/18)
 - More models/source integrations
 - More types of generation (tts, video, 3d models)
-- More-configuration options
 
 ## Known Issues
 

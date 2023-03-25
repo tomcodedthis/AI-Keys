@@ -6,7 +6,7 @@ import {
 	COMMENT_SYMBOLS,
 	MODELS_DEFAULT,
 	ARGS_SUPPORTED,
-} from "../../utils/defaults"
+} from "../../utils/configuration"
 
 export function getPrompt(prompt: vscode.TextLine) {
 	if (prompt.isEmptyOrWhitespace || !prompt) {

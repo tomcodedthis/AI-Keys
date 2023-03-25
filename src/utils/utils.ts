@@ -2,8 +2,9 @@ import * as vscode from "vscode"
 import * as fs from "fs"
 import * as https from "https"
 import * as path from "path"
-import { IMAGE_FORMAT_DEFAULT } from "./defaults"
+import { IMAGE_FORMAT_DEFAULT, LINE_LENGTH_DEFAULT } from "./configuration"
 import { getComment } from "../api/process/get"
+import { titleCase } from "title-case"
 
 export function go(setting: string, user = true) {
 	vscode.commands
@@ -14,8 +15,11 @@ export function go(setting: string, user = true) {
 }
 
 export function log(text: unknown) {
-	console.log(text)
-	vscode.window.setStatusBarMessage(text as string)
+	const time = new Date().toLocaleTimeString("en-uk")
+	const message = `${time}\n${text}`
+
+	console.log(message)
+	vscode.window.setStatusBarMessage(message)
 }
 
 export function notif(message: string, timeout = 10, setting = "none", user = false) {
@@ -85,5 +89,32 @@ export async function download(url: string, prompt: string) {
 
 			log("AI-Keys: Image download success")
 		})
+	})
+}
+
+export function write(res: string, aiName: string, nextLine: number) {
+	notif(`Here's what ${titleCase(aiName)} thinks` as string, 5)
+	log("AI-Keys: Response Success")
+
+	const editor = vscode.window.activeTextEditor as vscode.TextEditor
+	const comment = getComment()
+	let lineLength = 0
+
+	const text = res
+		.split("")
+		.slice(aiName === "text-davinci-003" ? 2 : 0)
+		.map((letter) => {
+			lineLength += letter.length
+
+			if (lineLength > LINE_LENGTH_DEFAULT && letter === " ") {
+				letter = `\n${comment} `
+				lineLength = 0
+			}
+
+			return letter === `\n` ? `${letter}${comment} ` : letter
+		})
+
+	editor.edit((editBulder) => {
+		editBulder.insert(new vscode.Position(nextLine, 0), `\n${comment} ${text.join("")}\n`)
 	})
 }
