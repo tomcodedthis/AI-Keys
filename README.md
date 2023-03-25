@@ -17,7 +17,7 @@ Keep control of your keys, usage and costs directly to the model provider.
 ## New Features
 
 ```md
-Chat using GPT-3.5-Turbo:
+Chat using GPT-3.5-Turbo (define how it behaves in your AI-Keys configuration settings):
 
 write a joke
 
@@ -127,20 +127,16 @@ AI-Keys: Open Settings
     </thead>
     <tbody>
         <tr>
-            <td rowspan=4><a href="https://platform.openai.com/">OpenAI</a></td>
-            <td rowspan=2>GPT</td>
+            <td rowspan=3><a href="https://platform.openai.com/">OpenAI</a></td>
+            <td>GPT-3.5-Turbo</td>
             <td>gpt</td>
-            <td rowspan=2>Text</td>
+            <td>Chat</td>
             <td rowspan=2><a href="https://openai.com/pricing#language-models">See more</a></td>
         </tr>
         <tr>
+            <td>GPT3</td>
             <td>gpt3</td>
-        </tr>
-        <tr>
-            <td>Codex</td>
-            <td>codex</td>
-            <td>Code</td>
-            <td>Free</td>
+            <td>Text</td>
         </tr>
         <tr>
             <td>DALL·E</td>
@@ -183,6 +179,7 @@ At least one API key from our supported AI sources:
 - `aikeys.sendLinePrompt`: Send prompts from inline active editor
 - `aikeys.sendBoxPrompt`: Send prompts from VSCode input box
 - `aikeys.listModels`: List all available models
+- `aikeys.clearChat`: Clear chat history with GPT
 
 ---
 
