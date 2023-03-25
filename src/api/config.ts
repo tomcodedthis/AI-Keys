@@ -1,10 +1,11 @@
-import { ARGS_SUPPORTED, MODELS_DEFAULT, MODEL_DEFAULT } from "../../utils/defaults"
-import { PromptConfig } from "../../utils/types"
-import { getArg, getModel } from "../process/get"
-import { processArg, removeArg } from "../process/process"
-import { clarifaiRequest } from "../providers/clarifai"
-import { getModels } from "../providers/models"
-import { openaiRequest } from "../providers/openai"
+import { ARGS_SUPPORTED, MODELS_DEFAULT, MODEL_DEFAULT } from "../utils/configuration"
+import { PromptConfig } from "../utils/types"
+import { log } from "../utils/utils"
+import { getArg, getModel } from "./process/get"
+import { processArg, removeArg } from "./process/process"
+import { clarifaiRequest } from "./providers/clarifai"
+import { getModels } from "./providers/models"
+import { clearChat, openaiRequest } from "./providers/openai"
 
 export async function config(prompt: PromptConfig) {
 	const argArray = prompt.text.trim().split(" ").slice(0, 5)
@@ -36,6 +37,15 @@ export async function config(prompt: PromptConfig) {
 	if (supportedArg(argArray)) {
 		const arg = getArg(argArray)
 		prompt.text = processArg(arg, prompt.text)
+
+		if (
+			ARGS_SUPPORTED.chatReset.some((supported) => {
+				return supported === arg
+			})
+		) {
+			clearChat()
+			return
+		}
 	}
 
 	await openaiRequest(model, prompt)
@@ -63,5 +73,3 @@ export function supportedArg(promptArray: string[]) {
 		return true
 	return false
 }
-
-// say hello

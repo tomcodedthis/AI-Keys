@@ -2,9 +2,9 @@ import * as vscode from "vscode"
 import { go, log, notif } from "../../utils/utils"
 import { getComment, getLanguage } from "./get"
 import { isComment, validInput } from "./check"
-import { OpenAIRequest, PromptConfig } from "../../utils/types"
-import { CreateImageRequest, Configuration, OpenAIApi } from "openai"
-import { ARGS_SUPPORTED, COMMENT_SYMBOLS, CONVERT_DEFAULT } from "../../utils/defaults"
+import { PromptConfig } from "../../utils/types"
+import { CreateImageRequest, Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletionRequest } from "openai"
+import { ARGS_SUPPORTED, COMMENT_SYMBOLS, CONVERT_DEFAULT } from "../../utils/configuration"
 
 export function processLine() {
 	const editor = vscode.window.activeTextEditor as vscode.TextEditor
@@ -41,7 +41,13 @@ export function processAPI(key: string) {
 	return openai
 }
 
-export function processError(err: any, req?: OpenAIRequest | CreateImageRequest) {
+export function processError(
+	err: any, 
+	req?:
+		CreateCompletionRequest |
+		CreateImageRequest | 
+		CreateChatCompletionRequest
+	) {
 	const badKey = [401, 404]
 	const limit = [429]
 	const servers = [500]

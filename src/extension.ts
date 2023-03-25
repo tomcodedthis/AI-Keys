@@ -1,11 +1,12 @@
 import * as vscode from "vscode"
 import { showInputBox } from "./components/inputBox"
-import { config } from "./api/config/config"
+import { config } from "./api/config"
 import { PromptConfig } from "./utils/types"
 import { processLine } from "./api/process/process"
 import { activeEditor } from "./api/process/check"
 import { go, log, notif } from "./utils/utils"
 import { listModels } from "./api/providers/models"
+import { clearChat } from "./api/providers/openai"
 
 export function activate(context: vscode.ExtensionContext) {
 	log("AIKeys: Activated")
@@ -25,7 +26,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 		config(prompt)
 	})
-	
 
 	const sendBoxPrompt = vscode.commands.registerCommand("aikeys.sendBoxPrompt", async () => {
 		if (!activeEditor()) return
@@ -36,7 +36,11 @@ export function activate(context: vscode.ExtensionContext) {
 		await listModels()
 	})
 
-	context.subscriptions.push(settings, sendLinePrompt, sendBoxPrompt, showModels)
+	const resetChat = vscode.commands.registerCommand("aikeys.resetChat", async () => {
+		clearChat()
+	})
+
+	context.subscriptions.push(settings, sendLinePrompt, sendBoxPrompt, showModels, resetChat)
 }
 
 export function deactivate() {

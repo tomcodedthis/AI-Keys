@@ -17,6 +17,21 @@ Keep control of your keys, usage and costs directly to the model provider.
 ## New Features
 
 ```md
+Chat using GPT-3.5-Turbo (define how it behaves in your AI-Keys configuration settings):
+
+write a joke
+
+think of a better one
+
+repeat the first one
+
+Reset chat (reduce token usage):
+
+clearChat
+
+```
+
+```md
 Image Recognintion:
 
 clarifai https://samples.clarifai.com/dog2.jpeg
@@ -112,20 +127,16 @@ AI-Keys: Open Settings
     </thead>
     <tbody>
         <tr>
-            <td rowspan=4><a href="https://platform.openai.com/">OpenAI</a></td>
-            <td rowspan=2>GPT</td>
+            <td rowspan=3><a href="https://platform.openai.com/">OpenAI</a></td>
+            <td>GPT-3.5-Turbo</td>
             <td>gpt</td>
-            <td rowspan=2>Text</td>
+            <td>Chat</td>
             <td rowspan=2><a href="https://openai.com/pricing#language-models">See more</a></td>
         </tr>
         <tr>
+            <td>GPT3</td>
             <td>gpt3</td>
-        </tr>
-        <tr>
-            <td>Codex</td>
-            <td>codex</td>
-            <td>Code</td>
-            <td>Free</td>
+            <td>Text</td>
         </tr>
         <tr>
             <td>DALL·E</td>
@@ -168,6 +179,7 @@ At least one API key from our supported AI sources:
 - `aikeys.sendLinePrompt`: Send prompts from inline active editor
 - `aikeys.sendBoxPrompt`: Send prompts from VSCode input box
 - `aikeys.listModels`: List all available models
+- `aikeys.clearChat`: Clear chat history with GPT
 
 ---
 
@@ -177,18 +189,18 @@ Features currently being worked on:
 
 1. Storing secret API keys
 2. Support for any Clarifai model (audio, text)
-3. More providers
+3. Support for Hugging Face
 4. More configuration
 
 ## To-Do
 
 Contributions are widely encouraged, get involved to earn XP
 
+- Conversation window, animated character (if possible)
 - Write proper tests for pre-release checks
 - Stream response [info](https://github.com/openai/openai-node/issues/18)
 - More models/source integrations
 - More types of generation (tts, video, 3d models)
-- More-configuration options
 
 ## Known Issues
 

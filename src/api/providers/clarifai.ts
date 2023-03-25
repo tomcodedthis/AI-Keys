@@ -4,7 +4,7 @@ import { titleCase } from "title-case"
 import { getComment, getLocalImage } from "../process/get"
 import { validImage, validKey } from "../process/check"
 import { go, log, notif } from "../../utils/utils"
-import { MODEL_ID_DEFAULT, MODEL_TYPE_DEFAULT } from "../../utils/defaults"
+import { MODEL_ID_DEFAULT, MODEL_TYPE_DEFAULT } from "../../utils/configuration"
 import { clarifaiRequest } from "../../utils/types"
 
 export async function clarifaiRequest(prompt: string) {
@@ -14,7 +14,7 @@ export async function clarifaiRequest(prompt: string) {
 		key: key,
 		userID: "",
 		modelID: MODEL_ID_DEFAULT,
-		appID: ""
+		appID: "",
 	}
 	let image
 
@@ -29,11 +29,10 @@ export async function clarifaiRequest(prompt: string) {
 		await imageRecognitionRequest(prompt, image as string, clarifai)
 }
 
-
 export async function imageRecognitionRequest(
 	prompt: string,
 	image: string,
-	clarifai: clarifaiRequest,
+	clarifai: clarifaiRequest
 ) {
 	const editor = vscode.window.activeTextEditor as vscode.TextEditor
 	const comment = getComment()
@@ -49,16 +48,13 @@ export async function imageRecognitionRequest(
 				const baseURL = "https://api.clarifai.com"
 				const url = `${baseURL}/v2/models/${clarifai.modelID}/outputs`
 				const data = {
-					"inputs": [
+					inputs: [
 						{
-							"data": {
-								"image":
-									image.startsWith("https")
-										? { "url": image }
-										: { "base64": image }
-								}
-						}
-					]
+							data: {
+								image: image.startsWith("https") ? { url: image } : { base64: image },
+							},
+						},
+					],
 				}
 				const options = {
 					url: url,
@@ -67,7 +63,7 @@ export async function imageRecognitionRequest(
 						Authorization: `Key ${clarifai.key}`,
 						"Content-Type": "application/json",
 					},
-					body: data
+					body: data,
 				}
 
 				request.post(options, async (error, res) => {
@@ -119,5 +115,6 @@ export async function imageRecognitionRequest(
 				notif(`Clarifai Error: ${error.response.data.error}`, 20)
 				log(`AI-Keys: Clarifai Error ${error.response.data.error.status}`)
 			}
-		})
+		}
+	)
 }
