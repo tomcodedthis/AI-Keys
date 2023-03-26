@@ -35,6 +35,14 @@ export const MODEL_ID_DEFAULT = vscode.workspace
 	.getConfiguration("AI-Keys")
 	.get("clarifai.modelID") as string
 
+// Hugging Face
+export const HF_MODEL_DEFAULT = vscode.workspace
+	.getConfiguration("AI-Keys")
+	.get("huggingFace.model") as string
+export const HF_MODEL_TYPE_DEFAULT = vscode.workspace
+	.getConfiguration("AI-Keys")
+	.get("huggingFace.modelType") as string
+
 // to-do: add these as vscode.workspace configuration
 export const LINE_LENGTH_DEFAULT = 100
 export const TEMP_DEFAULT = 0.6
@@ -56,6 +64,7 @@ export const ARGS_SUPPORTED = {
 	cv: ["cv", "convert"],
 	ex: ["ex", "explain"],
 	chatReset: ["clearChat", "resetChat", "resetGPT"],
+	model: ["model", "mod"],
 }
 export const CONVERT_DEFAULT = "javascript"
 export const MODELS_DEFAULT: { [key: string]: string } = {
@@ -65,5 +74,9 @@ export const MODELS_DEFAULT: { [key: string]: string } = {
 	dalle: "dalle",
 	clarifai: "clarifai",
 	clar: "clarifai",
+	huggingface: "huggingFace",
+	hface: "huggingFace",
+	hf: "huggingFace",
 }
 export const GPT_TURBO_MODELS = ["gpt-3.5-turbo", "gpt-3.5-turbo-0301"]
+export const HF_ARGS = ["text", "sum", "stt"]

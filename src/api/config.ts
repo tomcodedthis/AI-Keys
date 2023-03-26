@@ -1,9 +1,16 @@
-import { ARGS_SUPPORTED, MODELS_DEFAULT, MODEL_DEFAULT } from "../utils/configuration"
+import {
+	ARGS_SUPPORTED,
+	HF_MODEL_DEFAULT,
+	MODELS_DEFAULT,
+	MODEL_DEFAULT,
+} from "../utils/configuration"
 import { PromptConfig } from "../utils/types"
-import { log } from "../utils/utils"
+import { log, notif } from "../utils/utils"
 import { getArg, getModel } from "./process/get"
 import { processArg, removeArg } from "./process/process"
+import { setModel } from "./process/set"
 import { clarifaiRequest } from "./providers/clarifai"
+import { huggingFaceRequest } from "./providers/huggingFace"
 import { getModels } from "./providers/models"
 import { clearChat, openaiRequest } from "./providers/openai"
 
@@ -31,6 +38,31 @@ export async function config(prompt: PromptConfig) {
 		}
 
 		await clarifaiRequest(prompt.text)
+		return
+	}
+
+	if (model === "huggingFace") {
+		//  Set model
+		if (supportedArg(argArray)) {
+			const arg = getArg(argArray)
+
+			if (arg === "model") {
+				const newModel = argArray.slice(argArray.indexOf(arg)).filter((arg) => {
+					return arg !== "="
+				})[1]
+
+				if (!newModel) {
+					notif(`Please provide a new model for Hugging Face to use`)
+					log("AI-Keys: No new model provided")
+					return
+				}
+
+				setModel("huggingFace", newModel, "Hugging Face")
+				return
+			}
+		}
+
+		await huggingFaceRequest(HF_MODEL_DEFAULT, prompt)
 		return
 	}
 
