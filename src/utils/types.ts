@@ -17,3 +17,8 @@ export interface clarifaiRequest {
 	modelID: string
 	appID: string
 }
+
+export interface hfRequest {
+	model: string
+	inputs: string
+}

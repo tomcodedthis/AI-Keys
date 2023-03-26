@@ -5,6 +5,7 @@ import { isComment, validInput } from "./check"
 import { PromptConfig } from "../../utils/types"
 import { CreateImageRequest, Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletionRequest } from "openai"
 import { ARGS_SUPPORTED, COMMENT_SYMBOLS, CONVERT_DEFAULT } from "../../utils/configuration"
+import HuggingFace from "huggingface"
 
 export function processLine() {
 	const editor = vscode.window.activeTextEditor as vscode.TextEditor
@@ -34,7 +35,12 @@ export function processLine() {
 	return promptConfig
 }
 
-export function processAPI(key: string) {
+export function processAPI(key: string, provider = "openai") {
+	if (provider === "huggingface") {
+		const hfInterface = new HuggingFace(key)
+		return hfInterface
+	}
+
 	const configuration = new Configuration({ apiKey: key })
 	const openai = new OpenAIApi(configuration)
 

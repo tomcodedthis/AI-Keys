@@ -1,6 +1,11 @@
 # Change Log
 
-## 0.0.14
+## 0.0.16
+
+- Added Hugging Face as a model provider
+- Basic support for any model from Hugging Face that is: - text-generation - translation - automatic-speech-recognition
+
+## 0.0.15
 
 - Support for GPT-3.5-Turbo
 - Codex (code-davinci-002) has been depreceated and is no longer be supported
@@ -15,7 +20,7 @@
 - Support for Image Recognition
 - `CMD/CTRL + Enter` as inline search shortcut
 
-## 0.0.5 - 0.0.11
+## 0.0.11
 
 <!-- markdownlint-disable -->
 
@@ -25,11 +30,11 @@
 
 - Revert changes due to Clarifai API Clients using gRPC which is not supported by bundlers ESBuild or Webpack
 
-## 0.0.3 - 0.0.4
+## 0.0.4
 
 - Support for OpenAI's fine tuned models
 
-## 0.0.1 - 0.0.2
+## 0.0.2
 
 - Initial release
 

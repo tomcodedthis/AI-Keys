@@ -6,3 +6,4 @@ old-versions
 *.vsix
 vsc-extension-quickstart.md
 .vscode
+.DS_Store

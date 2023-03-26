@@ -17,6 +17,23 @@ Keep control of your keys, usage and costs directly to the model provider.
 ## New Features
 
 ```md
+Hugging Face Support
+
+Change model:
+
+hf model = gpt2
+
+Translation (ensure you've set a translation model, e.g. t5-base):
+
+hf hello, how are you?
+
+Speech to Text (ensure you've set a automatic-speech-recognition model, e.g. facebook/wav2vec2-large-960h-lv60-self):
+
+hf /PATH/TO/AUDIO/file.mp3
+
+```
+
+```md
 Chat using GPT-3.5-Turbo (define how it behaves in your AI-Keys configuration settings):
 
 write a joke
@@ -146,14 +163,28 @@ AI-Keys: Open Settings
         </tr>
         <tr>
             <td rowspan=2><a href="https://www.clarifai.com/">Clarifai</a></td>
-            <td rowspan=2>Clarifai</td>
+            <td rowspan=2>Any</td>
             <td>clarifai</td>
             <td rowspan=2>Image Recognition</td>
-            <td>1,000 Free Operations Per/Month</td>
+            <td>1,000 Free Operations per month</td>
         </tr>
         <tr>
             <td>clar</td>
             <td><a href="https://www.clarifai.com/pricing">See more</a></td>
+        </tr>
+        <tr>
+            <td rowspan=3><a href="https://huggingface.co/">Hugging Face</a></td>
+            <td rowspan=3>Any</td>
+            <td>huggingface</td>
+            <td rowspan=3>Text, Translation, Speech Recognition</td>
+            <td>30,000 Free Prompt Characters per month</td>
+        </tr>
+        <tr>
+            <td>hf</td>
+            <td rowspan=2><a href="https://huggingface.co/docs/hub/security-tokens">See more</a></td>
+        </tr>
+        <tr>
+            <td>hface</td>
         </tr>
     </tbody>
 </table>
@@ -187,9 +218,9 @@ At least one API key from our supported AI sources:
 
 Features currently being worked on:
 
-1. Storing secret API keys
-2. Support for any Clarifai model (audio, text)
-3. Support for Hugging Face
+1. More support for Hugging Face
+2. Storing secret API keys
+3. Support for any Clarifai model (audio, text)
 4. More configuration
 
 ## To-Do
