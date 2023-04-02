@@ -7,9 +7,12 @@ import { activeEditor } from "./api/process/check"
 import { go, log, notif } from "./utils/utils"
 import { listModels } from "./api/providers/models"
 import { clearChat } from "./api/providers/openai"
+import { ChatWindow } from "./components/chat"
 
 export function activate(context: vscode.ExtensionContext) {
 	log("AIKeys: Activated")
+
+	const provider = new ChatWindow(context.extensionUri)
 
 	const settings = vscode.commands.registerCommand("aikeys.goToSettings", () => {
 		notif("Opening settings", 5, "none")
@@ -40,7 +43,9 @@ export function activate(context: vscode.ExtensionContext) {
 		clearChat()
 	})
 
-	context.subscriptions.push(settings, sendLinePrompt, sendBoxPrompt, showModels, resetChat)
+	const panel = vscode.window.registerWebviewViewProvider("aikeys.chat", provider)
+
+	context.subscriptions.push(settings, sendLinePrompt, sendBoxPrompt, showModels, resetChat, panel)
 }
 
 export function deactivate() {

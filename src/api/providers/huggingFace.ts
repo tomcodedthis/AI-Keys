@@ -9,7 +9,11 @@ import { log, notif, write } from "../../utils/utils"
 import { validKey } from "../process/check"
 import { processAPI } from "../process/process"
 
-export async function huggingFaceRequest(modelName: string, prompt: PromptConfig) {
+export async function huggingFaceRequest(
+	modelName: string,
+	prompt: PromptConfig,
+	webview?: vscode.WebviewView
+) {
 	const config = vscode.workspace.getConfiguration("AI-Keys")
 	const key = config.get("keys.huggingface") as string
 
@@ -20,12 +24,12 @@ export async function huggingFaceRequest(modelName: string, prompt: PromptConfig
 
 	const hfInterface = processAPI(key, "huggingface") as HuggingFace
 
-	let req = {
+	const req = {
 		model: HF_MODEL_DEFAULT,
 		inputs: prompt.text,
 	}
 
-	return await startRequest(hfInterface, req, modelName, prompt.nextLine, key)
+	return await startRequest(hfInterface, req, modelName, prompt.nextLine || 0, key, webview)
 }
 
 export async function startRequest(
@@ -33,7 +37,8 @@ export async function startRequest(
 	req: hfRequest,
 	modelName: string,
 	nextLine: number,
-	key: string
+	key: string,
+	webview?: vscode.WebviewView
 ) {
 	await vscode.window.withProgress(
 		{
@@ -64,14 +69,14 @@ export async function startRequest(
 
 					if (modelType === "text generation") {
 						return await hf.textGeneration(req).then((res) => {
-							write(res.generated_text, modelName, nextLine)
+							write(res.generated_text, modelName, webview, nextLine)
 						})
 					}
 
 					if (modelType === "translation") {
 						return await hf.translation(req).then((res) => {
 							log(res)
-							write(res.translation_text, modelName, nextLine)
+							write(res.translation_text, modelName, webview, nextLine)
 						})
 					}
 
@@ -81,7 +86,7 @@ export async function startRequest(
 							data: readFileSync(req.inputs),
 						}
 						return await hf.automaticSpeechRecognition(auidoReq).then((res) => {
-							write(titleCase(res.text), modelName, nextLine)
+							write(titleCase(res.text), modelName, webview, nextLine)
 						})
 					}
 

@@ -1,0 +1,26 @@
+body {
+	color: var(--vscode-foreground);
+	font-size: var(--vscode-font-size);
+	font-weight: var(--vscode-font-weight);
+	font-family: var(--vscode-font-family);
+	background-color: var(--vscode-editor-background);
+}
+*:focus {
+	outline-color: var(--vscode-focusBorder) !important;
+}
+code {
+	font-size: var(--vscode-editor-font-size);
+	font-family: var(--vscode-editor-font-family);
+}
+button:hover {
+	cursor: pointer;
+}
+input,
+textarea,
+select {
+	background-color: var(--vscode-input-background);
+}
+input::placeholder,
+textarea::placeholder {
+	color: var(--vscode-input-placeholderForeground);
+}

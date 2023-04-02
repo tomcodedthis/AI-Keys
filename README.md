@@ -17,6 +17,12 @@ Keep control of your keys, usage and costs directly to the model provider.
 ## New Features
 
 ```md
+Chat (Pre-Release)
+```
+
+![Chat](https://github.com/tomcodedthis/AI-Keys/blob/develop/media/images/aikeys-chat.png?raw=true)
+
+```md
 Hugging Face Support
 
 Change model:

@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.17
+
+- Introduced Chat as new interface, a webview locate in the activity panel (Pre-Release)
+
 ## 0.0.16
 
 - Added Hugging Face as a model provider

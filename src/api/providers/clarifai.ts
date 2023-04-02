@@ -87,7 +87,7 @@ export async function imageRecognitionRequest(
 					}
 
 					const concepts = res.body.outputs[0].data.concepts
-					let conceptList: string[] = []
+					const conceptList: string[] = []
 
 					editor
 						.edit((line) => {

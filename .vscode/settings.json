@@ -8,18 +8,5 @@
 	},
 	// Turn off tsc task auto detection since we have the necessary tasks as npm scripts
 	"typescript.tsc.autoDetect": "off",
-	"AI-Keys.openAI.messages": [
-		{
-			"role": "system",
-			"content": "You are a software engineer"
-		},
-		{
-			"role": "user",
-			"content": "log(concepts) \n\t\t\tlog(concepts)"
-		},
-		{
-			"role": "assistant",
-			"content": "I'm sorry, I'm not sure what you're asking for. Can you please provide more context or clarify your question?"
-		}
-	]
+	"AI-Keys.openAI.messages": []
 }

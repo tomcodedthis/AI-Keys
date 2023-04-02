@@ -1,0 +1,119 @@
+:root {
+	--padding: 12px;
+	--gap: 10px;
+}
+* {
+	font-size: 14px;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+		Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	color: var(--vscode-color);
+	width: 100%;
+	outline: none;
+	border: none;
+	border-radius: 4px;
+	line-height: 1.6;
+	-webkit-appearance: none;
+}
+body {
+	margin: 0;
+	padding: var(--padding);
+	height: 100vh;
+	display: grid;
+	grid-template-rows: minmax(40px, 1fr) minmax(180px, 24fr) minmax(240px, 6fr);
+	gap: var(--gap);
+}
+select,
+option,
+button {
+	text-align: center;
+}
+textarea {
+	resize: none;
+	line-height: 1.6;
+}
+form {
+	display: grid;
+	grid-template-rows: 1fr 1fr 10fr 1fr;
+	gap: var(--gap);
+}
+label {
+	display: grid;
+	grid-template-columns: minmax(80px, 1fr) 9fr;
+	align-items: center;
+	justify-items: end;
+	gap: var(--gap);
+	font-weight: 600;
+	text-transform: uppercase;
+}
+button {
+	background-color: var(--vscode-input-background);
+	border-radius: var(--padding);
+	font-size: larger;
+	font-weight: 800;
+	text-transform: uppercase;
+	transition-duration: 400ms;
+	opacity: 0.8;
+}
+button:hover {
+	opacity: 1;
+}
+
+.input {
+	padding: var(--gap);
+}
+.input:focus {
+	outline-width: 2px;
+	outline-color: rgb(120, 120, 120) !important;
+}
+.response-panel {
+	display: grid;
+	grid-template-columns: 100%;
+	grid-template-rows: minmax(80px, 5fr) minmax(100px, 1fr);
+	gap: var(--gap);
+	justify-items: end;
+	background-color: var(--vscode-input-background);
+}
+.icon {
+	width: auto;
+	max-height: 100%;
+	padding: 0;
+	place-self: end;
+	object-fit: contain;
+}
+.message {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+	opacity: 0.9;
+	padding: var(--padding);
+	background-color: var(--vscode-editor-background);
+	border-radius: calc(var(--padding) / 2);
+}
+.chat {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--padding) / 2);
+	justify-content: end;
+	padding: calc(var(--padding) / 2);
+}
+.name {
+	text-align: right;
+	text-transform: uppercase;
+	font-size: smaller;
+	font-weight: 700;
+}
+.user {
+	opacity: 0.9;
+}
+.ai {
+	opacity: 0.95;
+}
+
+@media only screen and (max-width: 240px) {
+	label {
+		grid-template-columns: 100%;
+		justify-items: center;
+		gap: calc(var(--gap) / 2);
+		font-size: smaller;
+	}
+}

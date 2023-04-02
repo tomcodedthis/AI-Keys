@@ -1,3 +1,4 @@
+import { WebviewView } from "vscode"
 import {
 	ARGS_SUPPORTED,
 	HF_MODEL_DEFAULT,
@@ -14,7 +15,7 @@ import { huggingFaceRequest } from "./providers/huggingFace"
 import { getModels } from "./providers/models"
 import { clearChat, openaiRequest } from "./providers/openai"
 
-export async function config(prompt: PromptConfig) {
+export async function config(prompt: PromptConfig, webview?: WebviewView) {
 	const argArray = prompt.text.trim().split(" ").slice(0, 5)
 	const models = (await getModels()) as string[]
 	let model = MODELS_DEFAULT[MODEL_DEFAULT.toLowerCase()]
@@ -62,7 +63,7 @@ export async function config(prompt: PromptConfig) {
 			}
 		}
 
-		await huggingFaceRequest(HF_MODEL_DEFAULT, prompt)
+		await huggingFaceRequest(HF_MODEL_DEFAULT, prompt, webview)
 		return
 	}
 
@@ -80,7 +81,7 @@ export async function config(prompt: PromptConfig) {
 		}
 	}
 
-	await openaiRequest(model, prompt)
+	await openaiRequest(model, prompt, webview)
 }
 
 export async function supportedModel(promptArray: string[], check: string) {

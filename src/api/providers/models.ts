@@ -21,7 +21,7 @@ export async function listModels() {
 
 			const editor = vscode.window.activeTextEditor as vscode.TextEditor
 			const comment = getComment()
-			let owners: { [key: string]: string[] } = { openai: [] }
+			const owners: { [key: string]: string[] } = { openai: [] }
 			let text = ""
 
 			res.data.data.forEach((model) => {
@@ -65,7 +65,7 @@ export async function getModels() {
 	if (!validKey(key)) return
 
 	const openai = processAPI(key) as OpenAIApi
-	let models: string[] = [""]
+	const models: string[] = [""]
 
 	await openai
 		.listModels()
