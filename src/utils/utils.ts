@@ -5,6 +5,8 @@ import * as path from "path"
 import { IMAGE_FORMAT_DEFAULT, LINE_LENGTH_DEFAULT } from "./configuration"
 import { getComment } from "../api/process/get"
 import { titleCase } from "title-case"
+import { ChatWindow } from "../components/chat"
+import { message } from "./types"
 
 export function go(setting: string, user = true) {
 	vscode.commands
@@ -16,7 +18,7 @@ export function go(setting: string, user = true) {
 
 export function log(text: unknown) {
 	const time = new Date().toLocaleTimeString("en-uk")
-	const message = `${time}\n${text}`
+	const message = `${time} - ${text}`
 
 	console.log(message)
 	vscode.window.setStatusBarMessage(message)
@@ -92,7 +94,12 @@ export async function download(url: string, prompt: string) {
 	})
 }
 
-export function write(res: string, aiName: string, nextLine: number) {
+export function write(
+	res: string,
+	aiName: string,
+	webview?: vscode.WebviewView,
+	nextLine?: number
+) {
 	notif(`Here's what ${titleCase(aiName)} thinks` as string, 5)
 	log("AI-Keys: Response Success")
 
@@ -114,7 +121,19 @@ export function write(res: string, aiName: string, nextLine: number) {
 			return letter === `\n` ? `${letter}${comment} ` : letter
 		})
 
-	editor.edit((editBulder) => {
-		editBulder.insert(new vscode.Position(nextLine, 0), `\n${comment} ${text.join("")}\n`)
-	})
+	if (webview) {
+		// Do chat things
+		const message: message = {
+			command: "sendResponse",
+			data: {
+				model: aiName,
+				prompt: res,
+			},
+		}
+		webview.webview.postMessage(message)
+	} else {
+		editor.edit((editBulder) => {
+			editBulder.insert(new vscode.Position(nextLine || 0, 0), `\n${comment} ${text.join("")}\n`)
+		})
+	}
 }

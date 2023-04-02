@@ -8,7 +8,7 @@ export interface GeneralRequest {
 
 export interface PromptConfig {
 	text: string
-	nextLine: number
+	nextLine?: number
 }
 
 export interface clarifaiRequest {
@@ -21,4 +21,25 @@ export interface clarifaiRequest {
 export interface hfRequest {
 	model: string
 	inputs: string
+}
+
+export interface model {
+	name: string
+	label: string
+}
+
+export interface provider {
+	name: string
+	label: string
+	models: model[] | ""
+}
+
+export interface message {
+	command: string
+	data: {
+		model: string
+		provider?: string
+		system?: string
+		prompt: string
+	}
 }

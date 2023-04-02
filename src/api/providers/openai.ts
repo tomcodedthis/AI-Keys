@@ -28,7 +28,11 @@ import { getComment } from "../process/get"
 import { titleCase } from "title-case"
 import { validKey } from "../process/check"
 
-export async function openaiRequest(aiName: string, prompt: PromptConfig) {
+export async function openaiRequest(
+	aiName: string,
+	prompt: PromptConfig,
+	webview?: vscode.WebviewView
+) {
 	const config = vscode.workspace.getConfiguration("AI-Keys")
 	const key = config.get("keys.openai") as string
 
@@ -40,10 +44,10 @@ export async function openaiRequest(aiName: string, prompt: PromptConfig) {
 	const openai = processAPI(key) as OpenAIApi
 
 	if (aiName === "dalle") {
-		return await imageRequest(openai, prompt.text, aiName)
+		return await imageRequest(openai, prompt.text, aiName, webview)
 	}
 
-	let req = {
+	const req = {
 		model: aiName,
 		temperature: TEMP_DEFAULT,
 		max_tokens: MAX_TOKENS_DEFAULT,
@@ -74,22 +78,23 @@ export async function openaiRequest(aiName: string, prompt: PromptConfig) {
 
 		updateChat(chatReq.messages)
 
-		return await chatRequest(openai, chatReq, aiName, prompt.nextLine)
+		return await chatRequest(openai, chatReq, aiName, prompt.nextLine || 0, webview)
 	}
 
-	let textReq: CreateCompletionRequest = {
+	const textReq: CreateCompletionRequest = {
 		...req,
 		prompt: prompt.text,
 	}
 
-	return await textRequest(openai, textReq, aiName, prompt.nextLine)
+	return await textRequest(openai, textReq, aiName, prompt.nextLine || 0, webview)
 }
 
 export async function chatRequest(
 	openai: OpenAIApi,
 	req: CreateChatCompletionRequest,
 	aiName: string,
-	nextLine: number
+	nextLine: number,
+	webview?: vscode.WebviewView
 ) {
 	await vscode.window.withProgress(
 		{
@@ -103,7 +108,7 @@ export async function chatRequest(
 				.then((response) => {
 					const res = response.data.choices[0].message?.content as string
 
-					write(res, aiName, nextLine)
+					write(res, aiName, webview, nextLine)
 
 					const config = vscode.workspace.getConfiguration("AI-Keys")
 					const prevMsgs = config.get("openAI.messages") as ChatCompletionRequestMessage[]
@@ -134,7 +139,8 @@ export async function textRequest(
 	openai: OpenAIApi,
 	req: CreateCompletionRequest,
 	aiName: string,
-	nextLine: number
+	nextLine: number,
+	webview?: vscode.WebviewView
 ) {
 	await vscode.window.withProgress(
 		{
@@ -147,7 +153,7 @@ export async function textRequest(
 				.createCompletion(req)
 				.then((response) => {
 					const res = response.data.choices[0].text as string
-					write(res, aiName, nextLine)
+					write(res, aiName, webview, nextLine)
 				})
 				.catch((error) => {
 					notif(`OpenAI Error: ${error.response.data.error.message}`, 20)
@@ -158,7 +164,12 @@ export async function textRequest(
 	)
 }
 
-export async function imageRequest(openai: OpenAIApi, prompt: string, aiName: string) {
+export async function imageRequest(
+	openai: OpenAIApi,
+	prompt: string,
+	aiName: string,
+	webview?: vscode.WebviewView
+) {
 	await vscode.window.withProgress(
 		{
 			location: vscode.ProgressLocation.Notification,
@@ -183,6 +194,7 @@ export async function imageRequest(openai: OpenAIApi, prompt: string, aiName: st
 						notif(`Here's your ${aiName.toUpperCase()} image` as string, 5)
 						log("AI-Keys: Response Success")
 
+						write(`\n\n${comment} Image URL link:\n${comment} ${res}`, aiName, webview)
 						editor.edit((line) => {
 							line.insert(editor.selection.end, `\n\n${comment} Image URL link:\n${comment} ${res}`)
 						})

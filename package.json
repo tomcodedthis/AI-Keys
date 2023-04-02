@@ -7,7 +7,7 @@
 	"repository": {
 		"url": "https://github.com/tomcodedthis/AI-Keys"
 	},
-	"version": "0.0.16",
+	"version": "0.0.17",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -79,6 +79,14 @@
 							"Image Generation",
 							"Image Recognition"
 						]
+					},
+					"AI-Keys.active.provider": {
+						"type": "string",
+						"default": "openai"
+					},
+					"AI-Keys.active.model": {
+						"type": "string",
+						"default": "gpt"
 					},
 					"AI-Keys.openAI.maxTokens": {
 						"type": "number",
@@ -181,13 +189,31 @@
 				"mac": "cmd+alt+m",
 				"when": "editorTextFocus"
 			}
-		]
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "aikeys",
+					"title": "AI Keys",
+					"icon": "media/images/aikeys-icon.svg"
+				}
+			]
+		},
+		"views": {
+			"aikeys": [
+				{
+					"type": "webview",
+					"id": "aikeys.chat",
+					"name": "AI Chat"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
 		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:unfetch --platform=node",
 		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
+		"watch": "tsc -w",
 		"pretest": "npm run compile && npm run lint",
 		"lint": "eslint src --ext ts",
 		"test": "node ./out/test/runTest.js",

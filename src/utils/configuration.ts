@@ -1,10 +1,17 @@
 import { ChatCompletionRequestMessage } from "openai"
 import * as vscode from "vscode"
+import { provider } from "./types"
 
 //  Shared
 export const MODEL_DEFAULT = vscode.workspace
 	.getConfiguration("AI-Keys")
 	.get("defaultModel") as string
+export const ACTIVE_PROVIDER = vscode.workspace
+	.getConfiguration("AI-Keys.active")
+	.get("provider") as string
+export const ACTIVE_MODEL = vscode.workspace
+	.getConfiguration("AI-Keys.active")
+	.get("model") as string
 export const PREFIX_DEFAULT = vscode.workspace.getConfiguration("AI-Keys").get("prefix") as string
 export const IMAGE_FORMAT_DEFAULT = vscode.workspace
 	.getConfiguration("AI-Keys")
@@ -67,6 +74,36 @@ export const ARGS_SUPPORTED = {
 	model: ["model", "mod"],
 }
 export const CONVERT_DEFAULT = "javascript"
+export const PROVIDERS_DEFAULT: provider[] = [
+	{
+		name: "openai",
+		label: "Open AI",
+		models: [
+			{
+				name: "gpt-3.5-turbo",
+				label: "GPT-3.5-Turbo",
+			},
+			{
+				name: "text-davinci-003",
+				label: "GPT-3",
+			},
+			{
+				name: "dalle",
+				label: "DALL·E",
+			},
+		],
+	},
+	{
+		name: "huggingface",
+		label: "Hugging Face",
+		models: "",
+	},
+	{
+		name: "clarifai",
+		label: "Clarifai",
+		models: "",
+	},
+]
 export const MODELS_DEFAULT: { [key: string]: string } = {
 	"gpt-3.5-turbo": "gpt-3.5-turbo",
 	gpt: "gpt-3.5-turbo",
