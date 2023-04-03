@@ -6,7 +6,7 @@
 		provider: "",
 		model: "",
 		prompt: "",
-		messages: []
+		messages: [],
 	}
 
 	const chat = document.getElementById("chat")
@@ -33,14 +33,14 @@
 	models?.addEventListener("input", () => {
 		vscode.setState({ ...oldState, model: models?.value })
 	})
-	prompt.addEventListener("keydown", (event => {
+	prompt.addEventListener("keydown", (event) => {
 		if (event.shiftKey && event.key === "Enter") return
 		if (event.key === "Enter") {
 			event.preventDefault()
 			sendPrompt()
 			return
 		}
-	}))
+	})
 
 	// Recieve message typescript
 	window.addEventListener("message", (event) => {
