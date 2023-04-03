@@ -6,7 +6,7 @@
 		provider: "",
 		model: "",
 		prompt: "",
-		messages: [],
+		messages: []
 	}
 
 	const chat = document.getElementById("chat")
@@ -15,6 +15,8 @@
 	const system = document.getElementById("system")
 	const providers = document.getElementById("providers")
 	const models = document.getElementById("models")
+	let keysDown = []
+	let shortcut = false
 
 	btn?.addEventListener("click", () => {
 		sendPrompt()
@@ -31,7 +33,16 @@
 	models?.addEventListener("input", () => {
 		vscode.setState({ ...oldState, model: models?.value })
 	})
+	prompt.addEventListener("keydown", (event => {
+		if (event.shiftKey && event.key === "Enter") return
+		if (event.key === "Enter") {
+			event.preventDefault()
+			sendPrompt()
+			return
+		}
+	}))
 
+	// Recieve message typescript
 	window.addEventListener("message", (event) => {
 		const message = event.data
 		switch (message.command) {
@@ -55,6 +66,7 @@
 			prompt: prompt.value,
 		}
 
+		// Send message typescript
 		vscode.postMessage({ command: "sendPrompt", data: formData })
 
 		chat.appendChild(createMessage("User", `${formData.prompt}`))

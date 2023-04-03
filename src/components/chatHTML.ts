@@ -33,17 +33,6 @@ export function chatHTMl(webview: vscode.Webview, extensionUri: vscode.Uri) {
 				</head>
 
 				<body>
-					<label for="system">
-						System
-
-						<input
-							id="system"
-							class="input"
-							placeholder="You are a helpful assistant..."
-							type="text"
-						/>
-					</label>
-
 					<div class="response-panel">
 						<div
 							id="chat"
@@ -63,35 +52,49 @@ export function chatHTMl(webview: vscode.Webview, extensionUri: vscode.Uri) {
 							hidden
 						/>
 					</div>
+
 					<form>
-						<label for="providers">
-							Provider
-							<select
-								name="providers"
-								id="providers"
+						<label for="system">
+							System
+
+							<input
+								id="system"
 								class="input"
-								selected="${ACTIVE_PROVIDER}"
-							>
+								placeholder="You are a helpful assistant..."
+								type="text"
+							/>
+						</label>
+
+						<div class="model-choice-cont">
+							<label for="providers">
+								Provider
+								<select
+									name="providers"
+									id="providers"
+									class="input"
+									selected="${ACTIVE_PROVIDER}"
+								>
+									${PROVIDERS_DEFAULT.map((provider) => {
+										return option(provider.name, provider.label)
+									})}
+								</select>
+							</label>
+
+							<label for="models">
+								Model
+
 								${PROVIDERS_DEFAULT.map((provider) => {
-									return option(provider.name, provider.label)
+									if (ACTIVE_PROVIDER === provider.name) {
+										return provider.models === ""
+											? textInput(provider.label)
+											: options(provider.models)
+									}
+									return undefined
+								}).filter((res) => {
+									return res !== undefined
 								})}
-							</select>
-						</label>
-
-						<label for="models">
-							Model
-
-							${PROVIDERS_DEFAULT.map((provider) => {
-								if (ACTIVE_PROVIDER === provider.name) {
-									return provider.models === ""
-										? textInput(provider.label)
-										: options(provider.models)
-								}
-								return undefined
-							}).filter((res) => {
-								return res !== undefined
-							})}
-						</label>
+							</label>
+						</div>
 
 						<textarea
 							class="input"
@@ -138,7 +141,6 @@ export function textInput(provider: string) {
 	return `
 		<input
 			placeholder="Enter ${provider} model name/id..."
-			class="input"
 		/>
 	`
 }
