@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.0.17
+## 0.0.18
 
 - Introduced Chat as new interface, a webview locate in the activity panel (Pre-Release)
 
