@@ -5,7 +5,6 @@ import * as path from "path"
 import { IMAGE_FORMAT_DEFAULT, LINE_LENGTH_DEFAULT } from "./configuration"
 import { getComment } from "../api/process/get"
 import { titleCase } from "title-case"
-import { ChatWindow } from "../components/chat"
 import { message } from "./types"
 
 export function go(setting: string, user = true) {

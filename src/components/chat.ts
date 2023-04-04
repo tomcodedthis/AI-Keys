@@ -2,6 +2,7 @@ import * as vscode from "vscode"
 import { chatHTMl } from "./chatHTML"
 import { config } from "../api/config"
 import { PromptConfig, message } from "../utils/types"
+import { clearChat } from "../api/providers/openai"
 
 export class ChatWindow implements vscode.WebviewViewProvider {
 	public static readonly viewType = "aikeys.chat"
@@ -23,15 +24,23 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 
 		webviewView.webview.html = this.getHtmlForWebview(webviewView.webview)
 
+		// Recieve message from javascript
 		webviewView.webview.onDidReceiveMessage(async (message: message) => {
 			switch (message.command) {
 				case "sendPrompt": {
-					console.log(message.data)
 					const prompt = {
 						text: `${message.data.model} ${message.data.prompt}`,
 					}
 
 					await config(prompt, webviewView)
+					break
+				}
+				case "clearChat": {
+					clearChat()
+					break
+				}
+				case "goToSettings": {
+					vscode.commands.executeCommand("aikeys.goToSettings")
 					break
 				}
 			}

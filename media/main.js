@@ -15,6 +15,8 @@
 	const system = document.getElementById("system")
 	const providers = document.getElementById("providers")
 	const models = document.getElementById("models")
+	const clearChatBtn = document.getElementById("clear-chat-btn")
+	const settingsBtn = document.getElementById("settings-btn")
 	let keysDown = []
 	let shortcut = false
 
@@ -41,15 +43,21 @@
 			return
 		}
 	})
+	clearChatBtn.addEventListener("click", () => {
+		vscode.postMessage({ command: "clearChat" })
 
-	// Recieve message typescript
+		chat.replaceChildren()
+	})
+	settingsBtn.addEventListener("click", () => {
+		vscode.postMessage({ command: "goToSettings" })
+	})
+
+	// Recieve message from typescript
 	window.addEventListener("message", (event) => {
 		const message = event.data
 		switch (message.command) {
 			case "sendResponse": {
-				console.log(message.data)
-				chat.appendChild(createMessage(message.data.model, message.data.prompt))
-
+				chat.appendChild(chatMessage(message.data.model, message.data.prompt))
 				break
 			}
 		}
@@ -66,10 +74,10 @@
 			prompt: prompt.value,
 		}
 
-		// Send message typescript
+		// Send message to typescript
 		vscode.postMessage({ command: "sendPrompt", data: formData })
 
-		chat.appendChild(createMessage("User", `${formData.prompt}`))
+		chat.appendChild(chatMessage("User", `${formData.prompt}`))
 
 		setTimeout(() => {
 			vscode.setState({ ...oldState, idle: true })
@@ -84,13 +92,14 @@
 		if (vscode.getState().idle === false) {
 			icon.hidden = true
 			gif.hidden = false
-		} else {
-			icon.hidden = false
-			gif.hidden = true
+			return
 		}
+
+		icon.hidden = false
+		gif.hidden = true
 	}
 
-	function createMessage(speaker, text) {
+	function chatMessage(speaker, text) {
 		const msgCont = document.createElement("div")
 		msgCont.classList.add("input", "message", speaker === "User" ? "user" : "ai")
 
@@ -98,7 +107,8 @@
 		speakerCont.classList.add("name")
 		speakerCont.innerText = speaker
 
-		const textCont = document.createElement("div")
+		const textCont = document.createElement("span")
+		textCont.classList.add("message-content")
 		textCont.innerText = text
 
 		msgCont.append(speakerCont, textCont)

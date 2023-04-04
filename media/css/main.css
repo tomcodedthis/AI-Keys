@@ -109,9 +109,20 @@ button:hover {
 .response-panel {
 	display: grid;
 	grid-template-columns: 100%;
-	grid-template-rows: minmax(70px, 10fr) minmax(70px, 1fr);
+	grid-template-rows: minmax(15px, 1fr) minmax(60px, 18fr) minmax(50px, 2fr);
 	gap: var(--gap);
 	background-color: var(--vscode-input-background);
+}
+.controls-cont {
+	padding: var(--padding);
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--gap);
+}
+.controls-cont button {
+	padding: var(--padding);
+	font-size: var(--sub-font);
+	background-color: var(--vscode-editor-background);
 }
 .icon {
 	width: auto;
