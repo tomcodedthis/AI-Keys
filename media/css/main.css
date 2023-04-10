@@ -1,15 +1,16 @@
 :root {
 	--padding: 8px;
+	--paddingY: 6px;
+	--radius: 6px;
 	--gap: 8px;
-	--main-font: 12px;
-	--sub-font: 11px;
+	--main-font: 11px;
+	--sub-font: 10px;
 	--borer-radius: 6px;
 }
 * {
 	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
 		Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 	color: var(--vscode-color);
-	width: 100%;
 	outline: none;
 	border: none;
 	border-radius: var(--borer-radius);
@@ -19,23 +20,28 @@
 body {
 	margin: 0;
 	padding: var(--padding);
+	min-width: 200px;
 	height: 100vh;
 	display: grid;
-	grid-template-rows: minmax(150px, 4fr) minmax(280px, 1fr);
 	gap: var(--gap);
-	padding: var(--padding);
+}
+.body {
+	grid-template-rows: minmax(180px, 3fr) minmax(280px, 1fr);
 }
 
 /* small screen */
 @media only screen and (max-width: 250px) {
 	:root {
-		--main-font: 11px;
-		--sub-font: 10px;
+		--main-font: 10px;
+		--sub-font: 9px;
+		--padding: 6px;
 	}
-
-	label {
-		grid-template-columns: 1fr;
-		justify-items: center;
+}
+@media only screen and (max-height: 550px) {
+	:root {
+		--main-font: 10px;
+		--sub-font: 9px;
+		--paddingY: 6px;
 	}
 }
 /* big screen */
@@ -44,40 +50,50 @@ body {
 		--main-font: 13px;
 		--sub-font: 12px;
 	}
-	body {
-		grid-template-rows: minmax(180px, 12fr) minmax(210px, 1fr);
-	}
 	form {
 		grid-template-rows: 1fr 1fr 4fr 1fr;
 	}
-	.model-choice-cont {
-		grid-template-columns: 1fr 1fr;
+	.span-cols-var {
+		grid-column: span 1 !important;
+	}
+	.settings-cont {
+		grid-template-rows: repeat(3, 1fr) 4fr 1fr !important;
 	}
 }
 
 select,
 option,
 button {
-	font-size: var(--main-font);
+	width: 100%;
+	font-size: var(--sub-font);
 	text-align: center;
-	padding: var(--padding);
+	padding: var(--paddingY) var(--padding);
+}
+button {
+	opacity: 0.9;
+	transition-duration: 400ms;
+}
+button:hover {
+	opacity: 1;
 }
 input {
+	width: 100%;
 	font-size: var(--main-font);
 	padding: var(--padding);
 }
 textarea {
 	font-size: var(--main-font);
-	min-height: 70px;
 	resize: none;
 	line-height: 1.6;
 	padding: var(--padding);
 }
-form {
-	display: grid;
-	grid-template-rows: 1fr 2fr 3fr 1fr;
-	gap: var(--gap);
-	overflow: auto;
+select:focus,
+option:focus,
+button:focus,
+input:focus,
+textarea:focus {
+	outline-width: 2px;
+	outline-color: rgb(120, 120, 120) !important;
 }
 label {
 	display: grid;
@@ -97,60 +113,107 @@ button {
 	text-transform: uppercase;
 	transition-duration: 400ms;
 	opacity: 0.8;
+	white-space: nowrap;
 }
 button:hover {
 	opacity: 1;
 }
 
-.input:focus {
-	outline-width: 2px;
-	outline-color: rgb(120, 120, 120) !important;
-}
-.response-panel {
+.response-cont {
 	display: grid;
 	grid-template-columns: 100%;
-	grid-template-rows: minmax(70px, 10fr) minmax(70px, 1fr);
+	grid-template-rows: minmax(100px, 24fr) minmax(60px, 1fr);
 	gap: var(--gap);
 	background-color: var(--vscode-input-background);
 }
-.icon {
-	width: auto;
-	max-height: 100%;
-	padding: 0;
-	place-self: end;
-	object-fit: contain;
-}
-.message {
-	display: flex;
-	flex-direction: column;
-	gap: var(--gap);
+.response-cont:hover .icon {
 	opacity: 0.9;
-	padding: var(--padding);
-	background-color: var(--vscode-editor-background);
-	border-radius: calc(var(--padding) / 2);
+	box-shadow: 0 0 5px 5px var(--vscode-input-foreground);
 }
+
 .chat {
 	overflow: auto;
 	width: 100%;
 	display: grid;
 	grid-template-rows: 1fr;
-	gap: var(--padding);
-	padding: var(--padding);
+	gap: var(--gap);
+	padding: calc(var(--padding) * 0.8);
 	align-items: end;
 }
-.name {
+.message {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+	opacity: 0.8;
+	padding: calc(var(--padding) * 1.2);
+	margin: 0 !important;
+	background-color: var(--vscode-editor-background);
+	border-radius: calc(var(--padding) / 2);
+}
+.message:hover {
+	opacity: 1;
+}
+.message:nth-child(odd) {
 	text-align: right;
+	opacity: 0.7;
+}
+.message:nth-child(even) {
+	margin: 4px;
+	text-align: left;
+	opacity: 0.95;
+}
+.name {
 	text-transform: uppercase;
 	font-size: var(--sub-font);
 	font-weight: 700;
 }
-.user {
-	opacity: 0.9;
+
+.chat-bottom {
+	display: flex;
+	align-items: end;
+	justify-content: end;
 }
-.ai {
-	opacity: 0.95;
+.view-settings-btn {
+	width: fit-content;
+	padding: var(--paddingY) calc(var(--padding) * 2);
+	background-color: var(--vscode-editor-background);
+	border-radius: 8px 0 0 0;
 }
-.model-choice-cont {
+.icon,
+.icon svg {
+	display: flex;
+	width: fit-content;
+}
+
+.settings-cont {
 	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: repeat(4, 1fr) minmax(80px, 4fr) 1fr;
 	gap: var(--gap);
+}
+
+.span-cols {
+	grid-column: 1 / span 2;
+}
+.span-cols-var {
+	grid-column: 1 / span 2;
+}
+.bg-main {
+	background-color: var(--vscode-editor-background);
+	fill: var(--vscode-editor-background);
+}
+.bg-sub {
+	background-color: var(--vscode-input-foreground);
+	fill: var(--vscode-input-foreground);
+	fill-opacity: 0.5;
+	transition-duration: 400;
+}
+.hide {
+	display: none;
+}
+.settings-hidden .body {
+	grid-template-rows: minmax(200px, 30fr) minmax(300px, 1fr) !important;
+}
+.settings-hidden .settings-cont {
+	grid-template-rows: 1fr 4fr 1fr !important;
 }

@@ -2,6 +2,7 @@
 	const vscode = acquireVsCodeApi()
 	const oldState = vscode.getState() || {
 		idle: true,
+		viewSettings: true,
 		system: "",
 		provider: "",
 		model: "",
@@ -15,6 +16,12 @@
 	const system = document.getElementById("system")
 	const providers = document.getElementById("providers")
 	const models = document.getElementById("models")
+	const clearChatBtn = document.getElementById("clear-chat-btn")
+	const settingsBtn = document.getElementById("settings-btn")
+	const settingsCont = document.getElementById("settings-cont")
+	const viewSettingsBtn = document.getElementById("view-settings-btn")
+	const hideSettings = document.getElementsByClassName("hide-settings")
+
 	let keysDown = []
 	let shortcut = false
 
@@ -41,23 +48,48 @@
 			return
 		}
 	})
+	clearChatBtn.addEventListener("click", () => {
+		vscode.postMessage({ command: "clearChat" })
 
-	// Recieve message typescript
+		chat.replaceChildren()
+	})
+	settingsBtn.addEventListener("click", () => {
+		vscode.postMessage({ command: "goToSettings" })
+	})
+	viewSettingsBtn.addEventListener("click", () => {
+		vscode.postMessage({ command: "viewSettings" })
+	})
+
+	// Recieve message from typescript
 	window.addEventListener("message", (event) => {
 		const message = event.data
 		switch (message.command) {
 			case "sendResponse": {
-				console.log(message.data)
-				chat.appendChild(createMessage(message.data.model, message.data.prompt))
-
+				chat.appendChild(chatMessage(message.data.model, message.data.prompt))
 				break
+			}
+			case "viewSettings": {
+				for (let elem = 0; elem < hideSettings.length; elem += 1) {
+					if (!hideSettings[elem]) return
+					message.data === true
+						? hideSettings[elem].classList.remove("hide")
+						: hideSettings[elem].classList.add("hide")
+				}
+
+				if (message.data === true) {
+					document.body.classList.remove("settings-hidden")
+					settingsCont.classList.remove("settings-hidden")
+				} else {
+					document.body.classList.add("settings-hidden")
+					settingsCont.classList.add("settings-hidden")
+				}
 			}
 		}
 	})
 
 	function sendPrompt() {
 		vscode.setState({ ...oldState, idle: false })
-		switchIcon()
+		// switchIcon()
 
 		const formData = {
 			system: oldState.system || system.value,
@@ -66,31 +98,32 @@
 			prompt: prompt.value,
 		}
 
-		// Send message typescript
+		// Send message to typescript
 		vscode.postMessage({ command: "sendPrompt", data: formData })
 
-		chat.appendChild(createMessage("User", `${formData.prompt}`))
+		chat.appendChild(chatMessage("User", `${formData.prompt}`))
 
 		setTimeout(() => {
 			vscode.setState({ ...oldState, idle: true })
-			switchIcon()
+			// switchIcon()
 		}, 5000)
 	}
 
-	function switchIcon() {
-		const icon = document.getElementById("icon")
-		const gif = document.getElementById("gif")
+	// function switchIcon() {
+	// 	const icon = document.getElementById("icon")
+	// 	const gif = document.getElementById("gif")
 
-		if (vscode.getState().idle === false) {
-			icon.hidden = true
-			gif.hidden = false
-		} else {
-			icon.hidden = false
-			gif.hidden = true
-		}
-	}
+	// 	if (vscode.getState().idle === false) {
+	// 		icon.hidden = true
+	// 		gif.hidden = false
+	// 		return
+	// 	}
 
-	function createMessage(speaker, text) {
+	// 	icon.hidden = false
+	// 	gif.hidden = true
+	// }
+
+	function chatMessage(speaker, text) {
 		const msgCont = document.createElement("div")
 		msgCont.classList.add("input", "message", speaker === "User" ? "user" : "ai")
 
@@ -98,7 +131,8 @@
 		speakerCont.classList.add("name")
 		speakerCont.innerText = speaker
 
-		const textCont = document.createElement("div")
+		const textCont = document.createElement("span")
+		textCont.classList.add("message-content")
 		textCont.innerText = text
 
 		msgCont.append(speakerCont, textCont)
