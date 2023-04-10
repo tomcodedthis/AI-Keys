@@ -20,7 +20,7 @@ export async function huggingFaceRequest(
 	if (!validKey(key)) return
 	if (!modelName) return
 
-	log(`Your final prompt: ${prompt.text}\nSent to: ${modelName}`)
+	log(`Your final prompt: ${prompt.text}, sent to: ${modelName}`)
 
 	const hfInterface = processAPI(key, "huggingface") as HuggingFace
 

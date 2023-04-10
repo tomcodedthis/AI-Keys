@@ -43,11 +43,26 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 					vscode.commands.executeCommand("aikeys.goToSettings")
 					break
 				}
+				case "viewSettings": {
+					this.hideSettings()
+					break
+				}
 			}
 		})
 	}
 
 	private getHtmlForWebview(webview: vscode.Webview) {
 		return chatHTMl(webview, this.extensionUri)
+	}
+
+	private viewSettings = true
+
+	public hideSettings() {
+		this.view?.webview.postMessage({
+			command: "viewSettings",
+			data: !this.viewSettings,
+		})
+
+		this.viewSettings = !this.viewSettings
 	}
 }

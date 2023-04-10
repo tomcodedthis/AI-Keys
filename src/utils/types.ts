@@ -1,4 +1,5 @@
 import * as vscode from "vscode"
+import { ChatCompletionResponseMessage, CreateChatCompletionRequest } from "openai"
 
 export interface GeneralRequest {
 	language: string
@@ -42,4 +43,9 @@ export interface message {
 		system?: string
 		prompt: string
 	}
+}
+
+export interface chatMessage {
+	message: CreateChatCompletionRequest | ChatCompletionResponseMessage
+	model?: string
 }
