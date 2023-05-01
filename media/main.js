@@ -21,6 +21,7 @@
 	const settingsCont = document.getElementById("settings-cont")
 	const viewSettingsBtn = document.getElementById("view-settings-btn")
 	const hideSettings = document.getElementsByClassName("hide-settings")
+	const copyCont = document.getElementsByClassName("copied-cont")
 
 	let keysDown = []
 	let shortcut = false
@@ -59,13 +60,24 @@
 	viewSettingsBtn.addEventListener("click", () => {
 		vscode.postMessage({ command: "viewSettings" })
 	})
+	chat?.addEventListener("click", async (e) => {
+		if (!e.target.classList.contains("code-block")) return
+
+		const mousePosition = { x: e.clientX, y: e.clientY }
+		const copyNotif = copiedNotif(mousePosition)
+		const copyText = e.target.innerText
+
+		await copy(copyText, copyNotif)
+	})
 
 	// Recieve message from typescript
 	window.addEventListener("message", (event) => {
 		const message = event.data
+
 		switch (message.command) {
 			case "sendResponse": {
-				chat.appendChild(chatMessage(message.data.model, message.data.prompt))
+				chat.appendChild(chatBox(message.data.model, message.data.prompt))
+				chat.scrollTop = chat.scrollHeight
 				break
 			}
 			case "viewSettings": {
@@ -84,15 +96,25 @@
 					settingsCont.classList.add("settings-hidden")
 				}
 			}
+			case "loadChat": {
+				const messages = message.data.messages
+				messages.forEach((msg) => {
+					chat.appendChild(chatBox(msg.role, `${msg.content}`))
+				})
+				chat.scrollTop = chat.scrollHeight
+				system.value = message.data.system
+				break
+			}
 		}
 	})
 
 	function sendPrompt() {
 		vscode.setState({ ...oldState, idle: false })
+
 		// switchIcon()
 
 		const formData = {
-			system: oldState.system || system.value,
+			system: system.value,
 			provider: providers.value,
 			model: models.value,
 			prompt: prompt.value,
@@ -101,7 +123,8 @@
 		// Send message to typescript
 		vscode.postMessage({ command: "sendPrompt", data: formData })
 
-		chat.appendChild(chatMessage("User", `${formData.prompt}`))
+		chat.appendChild(chatBox("User", `${formData.prompt}`))
+		chat.scrollTop = chat.scrollHeight
 
 		setTimeout(() => {
 			vscode.setState({ ...oldState, idle: true })
@@ -123,20 +146,66 @@
 	// 	gif.hidden = true
 	// }
 
-	function chatMessage(speaker, text) {
+	function chatBox(speaker, text) {
+		let msgs = []
+		let isCode = false
+
+		text.split("```").forEach((section) => {
+			isCode
+				? msgs.push({ type: "code", text: section })
+				: msgs.push({ type: "normal", text: section })
+
+			isCode = !isCode
+		})
+
 		const msgCont = document.createElement("div")
-		msgCont.classList.add("input", "message", speaker === "User" ? "user" : "ai")
+		msgCont.classList.add("input", "message", speaker === "user" ? "user" : "ai")
 
 		const speakerCont = document.createElement("div")
 		speakerCont.classList.add("name")
 		speakerCont.innerText = speaker
 
-		const textCont = document.createElement("span")
+		const textCont = document.createElement("div")
 		textCont.classList.add("message-content")
-		textCont.innerText = text
+
+		msgs.forEach((msg) => {
+			textCont.append(chatMessage(msg))
+		})
 
 		msgCont.append(speakerCont, textCont)
 
 		return msgCont
+	}
+
+	function chatMessage(msg) {
+		const textCont = document.createElement("span")
+		textCont.classList.add(msg.type === "code" ? "code-block" : "text-block")
+		textCont.innerHTML = msg.text
+
+		return textCont
+	}
+
+	function copiedNotif(mousePosition) {
+		const textCont = copyCont.length > 0 ? copyCont[0] : document.createElement("span")
+
+		textCont.classList.add("copied-cont")
+		textCont.innerHTML = "copied"
+		textCont.style.left = `${mousePosition.x}px`
+		textCont.style.top = `${mousePosition.y}px`
+
+		return textCont
+	}
+
+	async function copy(text, copyNotif) {
+		try {
+			await navigator.clipboard.writeText(text)
+
+			chat.appendChild(copyNotif)
+			setTimeout(() => {
+				if (copyNotif.parentElement === chat) chat.removeChild(copyNotif)
+			}, 1500)
+		} catch (err) {
+			console.error("Failed to copy: ", err)
+		}
 	}
 })()

@@ -121,7 +121,7 @@ export async function chatRequest(
 					if ((response.data.usage?.total_tokens as number) > TOKEN_WARN_LIMIT) {
 						notif(
 							`AI-Keys: ${response.data.usage?.total_tokens as number} Tokens used for prompt.` +
-								` Reset your chat with the prompt clearChat, to reduce token usage`,
+								` Reset your chat to reduce token usage`,
 							10
 						)
 					}
