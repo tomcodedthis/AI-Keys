@@ -1,8 +1,13 @@
 # Change Log
 
+## 0.0.21
+
+- Loads previous messages into chat when view is opened
+- Improved response to system text input
+
 ## 0.0.20
 
-- Chat improvments, style changes and additional buttons.
+- Chat improvments, style changes and additional buttons
 
 ## 0.0.19
 

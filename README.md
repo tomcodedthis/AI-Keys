@@ -16,9 +16,7 @@ Keep control of your keys, usage and costs directly to the model provider.
 
 ## New Features
 
-```md
-Chat Demo (Pre-Release)
-```
+`Chat Demo (Pre-Release)`
 
 ![Chat](https://github.com/tomcodedthis/AI-Keys/blob/develop/media/gif/aikeys-demo.gif?raw=true)
 
@@ -224,16 +222,17 @@ At least one API key from our supported AI sources:
 
 Features currently being worked on:
 
-1. More support for Hugging Face
-2. Storing secret API keys
-3. Support for any Clarifai model (audio, text)
-4. More configuration
+1. Improved chat
+2. More support for Hugging Face
+3. Storing secret API keys
+4. Support for any Clarifai model (audio, text)
+5. More configuration
 
 ## To-Do
 
 Contributions are widely encouraged, get involved to earn XP
 
-- Conversation window, animated character (if possible)
+- Fully operational chat window
 - Write proper tests for pre-release checks
 - Stream response [info](https://github.com/openai/openai-node/issues/18)
 - More models/source integrations

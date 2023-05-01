@@ -73,6 +73,7 @@
 	// Recieve message from typescript
 	window.addEventListener("message", (event) => {
 		const message = event.data
+
 		switch (message.command) {
 			case "sendResponse": {
 				chat.appendChild(chatBox(message.data.model, message.data.prompt))
@@ -96,11 +97,12 @@
 				}
 			}
 			case "loadChat": {
-				const messages = message.data
-				messages.forEach(msg => {
+				const messages = message.data.messages
+				messages.forEach((msg) => {
 					chat.appendChild(chatBox(msg.role, `${msg.content}`))
 				})
 				chat.scrollTop = chat.scrollHeight
+				system.value = message.data.system
 				break
 			}
 		}
@@ -108,10 +110,11 @@
 
 	function sendPrompt() {
 		vscode.setState({ ...oldState, idle: false })
+
 		// switchIcon()
 
 		const formData = {
-			system: oldState.system || system.value,
+			system: system.value,
 			provider: providers.value,
 			model: models.value,
 			prompt: prompt.value,
@@ -147,10 +150,10 @@
 		let msgs = []
 		let isCode = false
 
-		text.split("```").forEach(section => {
+		text.split("```").forEach((section) => {
 			isCode
-				? msgs.push({ type: "code", text: section})
-				: msgs.push({ type: "normal", text: section})
+				? msgs.push({ type: "code", text: section })
+				: msgs.push({ type: "normal", text: section })
 
 			isCode = !isCode
 		})
@@ -165,7 +168,7 @@
 		const textCont = document.createElement("div")
 		textCont.classList.add("message-content")
 
-		msgs.forEach(msg => {
+		msgs.forEach((msg) => {
 			textCont.append(chatMessage(msg))
 		})
 
@@ -183,9 +186,7 @@
 	}
 
 	function copiedNotif(mousePosition) {
-		const textCont = copyCont.length > 0
-			? copyCont[0]
-			: document.createElement("span")
+		const textCont = copyCont.length > 0 ? copyCont[0] : document.createElement("span")
 
 		textCont.classList.add("copied-cont")
 		textCont.innerHTML = "copied"
@@ -197,14 +198,14 @@
 
 	async function copy(text, copyNotif) {
 		try {
-		  await navigator.clipboard.writeText(text);
+			await navigator.clipboard.writeText(text)
 
-		  chat.appendChild(copyNotif)
-		  setTimeout(() => {
-			  if (copyNotif.parentElement === chat) chat.removeChild(copyNotif)
-		  }, 1500)
+			chat.appendChild(copyNotif)
+			setTimeout(() => {
+				if (copyNotif.parentElement === chat) chat.removeChild(copyNotif)
+			}, 1500)
 		} catch (err) {
-		  console.error('Failed to copy: ', err);
+			console.error("Failed to copy: ", err)
 		}
 	}
 })()

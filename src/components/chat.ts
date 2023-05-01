@@ -5,6 +5,7 @@ import { PromptConfig, message } from "../utils/types"
 import { clearChat } from "../api/providers/openai"
 import { log } from "../utils/utils"
 import { ChatCompletionRequestMessage } from "openai"
+import { CHAT_LOG } from "../utils/configuration"
 
 export class ChatWindow implements vscode.WebviewViewProvider {
 	public static readonly viewType = "aikeys.chat"
@@ -31,8 +32,22 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 		webviewView.webview.onDidReceiveMessage(async (message: message) => {
 			switch (message.command) {
 				case "sendPrompt": {
+					const system = message.data.system
 					const prompt = {
 						text: `${message.data.model} ${message.data.prompt}`,
+					}
+					console.log(system)
+
+					if (system) {
+						await vscode.workspace.getConfiguration("AI-Keys.openAI").update("system", system)
+
+						const messages = vscode.workspace
+							.getConfiguration("AI-Keys.openAI")
+							.get("messages") as ChatCompletionRequestMessage[]
+
+						if (messages.length > 0) messages[0].content = system
+
+						await vscode.workspace.getConfiguration("AI-Keys.openAI").update(`messages`, messages)
 					}
 
 					await config(prompt, webviewView)
@@ -53,19 +68,29 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 			}
 		})
 
-		if (this.view?.visible) this.view.webview.postMessage({ 
-			command: "loadChat",
-			data: vscode.workspace.getConfiguration("AI-Keys").get("openAI.messages") as ChatCompletionRequestMessage[]
-		})
-
-		this.view?.onDidChangeVisibility(e => {
-			if (this.view?.visible) this.view.webview.postMessage({
+		if (this.view?.visible)
+			this.view.webview.postMessage({
 				command: "loadChat",
-				data: vscode.workspace.getConfiguration("AI-Keys").get("openAI.messages") as ChatCompletionRequestMessage[]
+				data: {
+					system: vscode.workspace.getConfiguration("AI-Keys.openAI").get("system"),
+					messages: vscode.workspace
+						.getConfiguration("AI-Keys.openAI")
+						.get("messages") as ChatCompletionRequestMessage[],
+				},
 			})
-		})
 
-		webviewView.webview.onDidReceiveMessage
+		this.view?.onDidChangeVisibility(() => {
+			if (this.view?.visible)
+				this.view.webview.postMessage({
+					command: "loadChat",
+					data: {
+						system: vscode.workspace.getConfiguration("AI-Keys.openAI").get("system"),
+						messages: vscode.workspace
+							.getConfiguration("AI-Keys.openAI")
+							.get("messages") as ChatCompletionRequestMessage[],
+					},
+				})
+		})
 	}
 
 	private getHtmlForWebview(webview: vscode.Webview) {
