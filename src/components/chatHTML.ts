@@ -42,11 +42,13 @@ export function chatHTMl(webview: vscode.Webview, extensionUri: vscode.Uri) {
 
 export function body() {
 	return `
+
 		<body class="body">
 			${chat()}
 
 			${settings()}
 		</body>
+
 	`
 }
 

@@ -3,10 +3,13 @@ import { chatHTMl } from "./chatHTML"
 import { config } from "../api/config"
 import { PromptConfig, message } from "../utils/types"
 import { clearChat } from "../api/providers/openai"
+import { log } from "../utils/utils"
+import { ChatCompletionRequestMessage } from "openai"
 
 export class ChatWindow implements vscode.WebviewViewProvider {
 	public static readonly viewType = "aikeys.chat"
 	public view?: vscode.WebviewView
+	private viewSettings = true
 
 	constructor(private readonly extensionUri: vscode.Uri) {}
 
@@ -49,13 +52,25 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 				}
 			}
 		})
+
+		if (this.view?.visible) this.view.webview.postMessage({ 
+			command: "loadChat",
+			data: vscode.workspace.getConfiguration("AI-Keys").get("openAI.messages") as ChatCompletionRequestMessage[]
+		})
+
+		this.view?.onDidChangeVisibility(e => {
+			if (this.view?.visible) this.view.webview.postMessage({
+				command: "loadChat",
+				data: vscode.workspace.getConfiguration("AI-Keys").get("openAI.messages") as ChatCompletionRequestMessage[]
+			})
+		})
+
+		webviewView.webview.onDidReceiveMessage
 	}
 
 	private getHtmlForWebview(webview: vscode.Webview) {
 		return chatHTMl(webview, this.extensionUri)
 	}
-
-	private viewSettings = true
 
 	public hideSettings() {
 		this.view?.webview.postMessage({

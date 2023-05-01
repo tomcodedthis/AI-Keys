@@ -17,10 +17,10 @@ Keep control of your keys, usage and costs directly to the model provider.
 ## New Features
 
 ```md
-Chat (Pre-Release)
+Chat Demo (Pre-Release)
 ```
 
-![Chat](https://github.com/tomcodedthis/AI-Keys/blob/develop/media/images/aikeys-chat.png?raw=true)
+![Chat](https://github.com/tomcodedthis/AI-Keys/blob/develop/media/gif/aikeys-demo.gif?raw=true)
 
 ```md
 Hugging Face Support

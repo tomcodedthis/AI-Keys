@@ -6,6 +6,7 @@
 	--main-font: 11px;
 	--sub-font: 10px;
 	--borer-radius: 6px;
+	--transition-duration: 400ms;
 }
 * {
 	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
@@ -71,7 +72,7 @@ button {
 }
 button {
 	opacity: 0.9;
-	transition-duration: 400ms;
+	transition-duration: var(--transition-duration);
 }
 button:hover {
 	opacity: 1;
@@ -111,7 +112,7 @@ button {
 	font-size: var(--main-font);
 	font-weight: 800;
 	text-transform: uppercase;
-	transition-duration: 400ms;
+	transition-duration: var(--transition-duration);
 	opacity: 0.8;
 	white-space: nowrap;
 }
@@ -122,7 +123,7 @@ button:hover {
 .response-cont {
 	display: grid;
 	grid-template-columns: 100%;
-	grid-template-rows: minmax(100px, 24fr) minmax(60px, 1fr);
+	grid-template-rows: minmax(100px, 28fr) minmax(30px, 1fr);
 	gap: var(--gap);
 	background-color: var(--vscode-input-background);
 }
@@ -144,20 +145,16 @@ button:hover {
 	display: flex;
 	flex-direction: column;
 	gap: var(--gap);
-	opacity: 0.8;
 	padding: calc(var(--padding) * 1.2);
 	margin: 0 !important;
 	background-color: var(--vscode-editor-background);
 	border-radius: calc(var(--padding) / 2);
 }
-.message:hover {
-	opacity: 1;
-}
-.message:nth-child(odd) {
+.user {
 	text-align: right;
-	opacity: 0.7;
+	opacity: 0.8;
 }
-.message:nth-child(even) {
+.ai {
 	margin: 4px;
 	text-align: left;
 	opacity: 0.95;
@@ -166,6 +163,29 @@ button:hover {
 	text-transform: uppercase;
 	font-size: var(--sub-font);
 	font-weight: 700;
+}
+.message-content {
+	display: grid;
+	grid-template-rows: 1fr;
+	gap: calc(var(--gap) * 2);
+}
+.code-block {
+	background-color: var(--vscode-textBlockQuote-background);
+	cursor: pointer;
+	font-family: monospace;
+	padding: var(--padding);
+	opacity: 0.7;
+	transition-duration: var(--transition-duration);
+}
+.code-block:hover {
+	opacity: 1;
+}
+.copied-cont {
+	position: absolute;
+	padding: calc(var(--padding) / 2) var(--padding);
+	font-weight: bold;
+	text-transform: uppercase;
+	background-color: var(--vscode-input-background);
 }
 
 .chat-bottom {
@@ -206,7 +226,7 @@ button:hover {
 	background-color: var(--vscode-input-foreground);
 	fill: var(--vscode-input-foreground);
 	fill-opacity: 0.5;
-	transition-duration: 400;
+	transition-duration: var(--transition-duration);
 }
 .hide {
 	display: none;
