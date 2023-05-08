@@ -7,7 +7,7 @@
 	"repository": {
 		"url": "https://github.com/tomcodedthis/AI-Keys"
 	},
-	"version": "0.0.21",
+	"version": "0.0.22",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -84,31 +84,6 @@
 						"type": "string",
 						"default": "openai"
 					},
-					"AI-Keys.active.model": {
-						"type": "string",
-						"default": "gpt"
-					},
-					"AI-Keys.openAI.maxTokens": {
-						"type": "number",
-						"description": "Set your max token response.\n\n1 Token = 1 Character",
-						"default": 256
-					},
-					"AI-Keys.openAI.system": {
-						"type": "string",
-						"description": "For GPT-3.5-Turbo and above, define the behavior of how GPT should respond.\n\ne.g. You are a helpful assistant",
-						"default": "You are a software engineer"
-					},
-					"AI-Keys.openAI.messages": {
-						"type": "array",
-						"description": "Your active chat log sent to GPT each request.\n\nClear this to reduce you token usage.",
-						"default": [],
-						"minItems": []
-					},
-					"AI-Keys.openAI.tokenWarn": {
-						"type": "number",
-						"description": "The limit at which to warn of a prompts token usage.",
-						"default": 1000
-					},
 					"AI-Keys.prefix": {
 						"type": "string",
 						"description": "Add a preffix to start your prompt.\n\ne.g. Framework / Library / Topic",
@@ -146,6 +121,37 @@
 							"1024x1024"
 						]
 					},
+					"AI-Keys.openAI.model": {
+						"type": "string",
+						"description": "Specify the model ID to use for your OpenAI requests.",
+						"default": "gpt"
+					},
+					"AI-Keys.openAI.maxTokens": {
+						"type": "number",
+						"description": "Set your max token response.\n\n1 Token = 1 Character",
+						"default": 256
+					},
+					"AI-Keys.openAI.system": {
+						"type": "string",
+						"description": "For GPT-3.5-Turbo and above, define the behavior of how GPT should respond.\n\ne.g. You are a helpful assistant",
+						"default": "You are a software engineer"
+					},
+					"AI-Keys.openAI.messages": {
+						"type": "array",
+						"description": "Your active chat log sent to GPT each request.\n\nClear this to reduce you token usage.",
+						"default": [],
+						"minItems": []
+					},
+					"AI-Keys.openAI.tokenWarn": {
+						"type": "number",
+						"description": "The limit at which to warn of a prompts token usage.",
+						"default": 1000
+					},
+					"AI-Keys.clarifai.model": {
+						"type": "string",
+						"description": "Specify the model ID to use for your Clarifai requests.",
+						"default": "aaa03c23b3724a16a56b629203edc62c"
+					},
 					"AI-Keys.clarifai.modelType": {
 						"type": "string",
 						"description": "Choose which type of generative AI from Clarifai you're using.",
@@ -156,11 +162,6 @@
 						"enumDescriptions": [
 							"Returns the top-10 concepts and probability of what an image contains."
 						]
-					},
-					"AI-Keys.clarifai.modelID": {
-						"type": "string",
-						"description": "Specify the model ID to use for your Clarifai requests.",
-						"default": "aaa03c23b3724a16a56b629203edc62c"
 					},
 					"AI-Keys.huggingFace.model": {
 						"type": "string",

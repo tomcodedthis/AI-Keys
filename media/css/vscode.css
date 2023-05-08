@@ -5,9 +5,6 @@ body {
 	font-family: var(--vscode-font-family);
 	background-color: var(--vscode-editor-background);
 }
-*:focus {
-	outline-color: var(--vscode-focusBorder) !important;
-}
 code {
 	font-size: var(--vscode-editor-font-size);
 	font-family: var(--vscode-editor-font-family);

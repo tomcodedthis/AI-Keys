@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.22
+
+- Multiple provider suppport in chat (Hugging Face, Clarifai).
+- Improved chat user interface.
+
 ## 0.0.21
 
 - Loads previous messages into chat when view is opened

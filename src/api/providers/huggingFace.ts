@@ -59,15 +59,17 @@ export async function startRequest(
 				}
 
 				request.get(options, async (error, res) => {
-					if (error || !res) {
-						notif(`Hugging Face: ${error}`, 20)
-						log(`AI-Keys: Hugging Face $${error}`)
+					if (error || res.body.error || !res) {
+						notif(`Hugging Face: ${error ? error : res.body.error}`, 20)
+						log(`AI-Keys: Hugging Face ${error ? error : res.body.error}`)
 						return
 					}
 
+					console.log(res.body.error)
+
 					const modelType = res.body.pipeline_tag.toLowerCase()
 
-					if (modelType === "text generation") {
+					if (modelType === "text-generation") {
 						return await hf.textGeneration(req).then((res) => {
 							write(res.generated_text, modelName, webview, nextLine)
 						})
@@ -91,7 +93,11 @@ export async function startRequest(
 					}
 
 					notif(
-						`AI-Keys: Either ${modelType} is not currently supported,\n or ${modelName} not recognised as a Hugging Face Model`
+						`AI-Keys: ${
+							modelType
+								? `${modelType} is not currently supported.`
+								: `${modelName} not recognised as a Hugging Face Model`
+						}`
 					)
 					log("AI-Keys: Unrecognised model")
 					return

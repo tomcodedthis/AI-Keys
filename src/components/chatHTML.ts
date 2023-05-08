@@ -4,12 +4,6 @@ import { model } from "../utils/types"
 
 export function chatHTMl(webview: vscode.Webview, extensionUri: vscode.Uri) {
 	const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, "media", "main.js"))
-	const iconUri = webview.asWebviewUri(
-		vscode.Uri.joinPath(extensionUri, "media/images", "aikeys-idle.png")
-	)
-	const gifUri = webview.asWebviewUri(
-		vscode.Uri.joinPath(extensionUri, "media/images", "aikeys-thinking.gif")
-	)
 	const styleResetUri = webview.asWebviewUri(
 		vscode.Uri.joinPath(extensionUri, "media/css", "reset.css")
 	)
@@ -20,7 +14,7 @@ export function chatHTMl(webview: vscode.Webview, extensionUri: vscode.Uri) {
 		vscode.Uri.joinPath(extensionUri, "media/css", "main.css")
 	)
 
-	return `
+	return /*html*/ `
 		<!DOCTYPE html>
 			<html lang="en">
 				<head>
@@ -41,19 +35,17 @@ export function chatHTMl(webview: vscode.Webview, extensionUri: vscode.Uri) {
 }
 
 export function body() {
-	return `
-
+	return /*html*/ `
 		<body class="body">
 			${chat()}
-
 			${settings()}
+			<span id="notif-cont" class="notif-cont hide"></span>
 		</body>
-
 	`
 }
 
 export function chat() {
-	return `
+	return /*html*/ `
 		<div class="response-cont">
 			<div
 				id="chat"
@@ -61,11 +53,31 @@ export function chat() {
 			></div>
 
 			<div class="chat-bottom">
-				<button 
-					id="view-settings-btn"
-					class="view-settings-btn"
+				<a 
+					href="https://github.com/tomcodedthis/AI-Keys#setup"
+					id="info-link"
+					style="color: none"
 				>
-					<i class="fa-solid fa-cog fa-lg"></i>
+					<button 
+						id="info-btn"
+						class="toggle-btn"
+					>
+						<i class="fa-solid fa-circle-info fa-lg toggle-btn"></i>
+					</button>
+				</a>
+
+				<button 
+					id="clear-chat-btn"
+					class="toggle-btn"
+				>
+					<i class="fa-solid fa-ban fa-lg toggle-btn"></i>
+				</button>
+
+				<button 
+					id="settings-btn"
+					class="toggle-btn"
+				>
+					<i class="fa-solid fa-cog fa-lg toggle-btn"></i>
 				</button>
 			</div>
 		</div>
@@ -73,22 +85,40 @@ export function chat() {
 }
 
 export function settings() {
-	return `
+	return /*html*/ `
 		<div 
 			id="settings-cont"
 			class="settings-cont"
 		>
-			<button
-				id="settings-btn"
-				class="">
-					Settings
-			</button>
-			
-			<button 
-				id="clear-chat-btn"
-				class="">
-					Clear Chat
-			</button>
+			<label
+				for="providers"
+				class="span-cols-var hide-settings"
+			>
+				Provider
+				<select
+					name="providers"
+					id="providers"
+					selected="${ACTIVE_PROVIDER}"
+				>
+					${PROVIDERS_DEFAULT.map((provider) => {
+						console.log(ACTIVE_PROVIDER, provider.name)
+						return option(provider.name, provider.label)
+					})}
+				</select>
+			</label>
+
+			<label
+				for="models"
+				class="span-cols-var hide-settings"
+			>
+				Model
+
+				<input
+					name="models"
+					placeholder="${ACTIVE_PROVIDER} model id..."
+					id="models-text"
+				/>
+			</label>
 
 			<label 
 				for="system"
@@ -101,38 +131,6 @@ export function settings() {
 					placeholder="You are a helpful assistant..."
 					type="text"
 				/>
-			</label>
-
-			<label
-				for="providers"
-				class="span-cols-var hide-settings"
-			>
-				Provider
-				<select
-					name="providers"
-					id="providers"
-					selected="${ACTIVE_PROVIDER}"
-				>
-					${PROVIDERS_DEFAULT.map((provider) => {
-						return option(provider.name, provider.label)
-					})}
-				</select>
-			</label>
-
-			<label
-				for="models"
-				class="span-cols-var hide-settings"
-			>
-				Model
-
-				${PROVIDERS_DEFAULT.map((provider) => {
-					if (ACTIVE_PROVIDER === provider.name) {
-						return provider.models === "" ? textInput(provider.label) : options(provider.models)
-					}
-					return undefined
-				}).filter((res) => {
-					return res !== undefined
-				})}
 			</label>
 
 			<textarea
@@ -154,29 +152,7 @@ export function settings() {
 
 export function option(name: string, label: string) {
 	return `
-		<option value="${name}">${label}</option>
-	`
-}
-
-export function options(optionsArray: model[]) {
-	return `
-		<select
-			name="models"
-			id="models"
-		>
-			${optionsArray.map((model) => {
-				return option(model.name, model.label)
-			})}
-		</select>
-	`
-}
-
-export function textInput(provider: string) {
-	return `
-		<input
-			placeholder="Enter ${provider} model name/id..."
-		/>
-	`
+		<option value="${name}" class="provider-option">${label}</option>`
 }
 
 export function icon() {
