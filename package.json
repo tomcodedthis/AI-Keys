@@ -121,6 +121,12 @@
 							"1024x1024"
 						]
 					},
+					"AI-Keys.messages": {
+						"type": "array",
+						"description": "Your active message histroy.\n\nThis doesn't get sent to any AI.",
+						"default": [],
+						"minItems": []
+					},
 					"AI-Keys.openAI.model": {
 						"type": "string",
 						"description": "Specify the model ID to use for your OpenAI requests.",

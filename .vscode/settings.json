@@ -8,6 +8,21 @@
 	},
 	// Turn off tsc task auto detection since we have the necessary tasks as npm scripts
 	"typescript.tsc.autoDetect": "off",
-	"AI-Keys.openAI.messages": [],
-	"AI-Keys.openAI.system": "only reply in spanish"
+	"AI-Keys.openAI.messages": [
+		{
+			"role": "system",
+			"content": "only reply in spanish"
+		},
+		{
+			"role": "user",
+			"content": "model?: string, \n\tmodel?: string,"
+		},
+		{
+			"role": "assistant",
+			"content": "Lo siento, parece que hay un error en el código que proporcionaste. ¿Puedes proporcionar más contexto o información para entender mejor lo que estás preguntando?"
+		}
+	],
+	"AI-Keys.openAI.system": "only reply in spanish",
+	"AI-Keys.active.provider": "huggingface",
+	"AI-Keys.huggingFace.model": "bigscience/bloom-560m"
 }

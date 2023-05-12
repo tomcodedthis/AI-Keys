@@ -56,10 +56,8 @@
 	})
 	chat.addEventListener("click", async (e) => {
 		if (!e.target.classList.contains("code-block")) return
-
 		try {
 			await navigator.clipboard.writeText(e.target.innerText)
-
 			const mousePosition = { x: e.clientX, y: e.clientY }
 			notify("copied", mousePosition, "copy", undefined)
 		} catch (err) {
@@ -71,7 +69,7 @@
 		btn.addEventListener("mouseenter", async (e) => {
 			const target = e.target.tagName === "I" ? e.target.parentElement : e.target
 			const pos = target.getBoundingClientRect(target)
-			const mousePosition = { x: pos.x, y: pos.y - 6 }
+			const mousePosition = { x: pos.x, y: pos.y }
 			const name = target.id
 				.split("-")
 				.filter((word) => {
@@ -115,10 +113,8 @@
 				const model = message.data.model
 
 				providers.value = provider
-				providers.selected = provider
-
 				modelsText.value = model
-				modelsText.placeholder = `${model} model id...`
+				modelsText.placeholder = `${provider} model id...`
 
 				if (provider === "openai") {
 					system.parentElement.classList.remove("hide")

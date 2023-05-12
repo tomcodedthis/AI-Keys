@@ -11,6 +11,7 @@
 		"@typescript-eslint/naming-convention": "off",
 		"@typescript-eslint/semi": "off",
 		"@typescript-eslint/no-unused-vars": "off",
+		"@typescript-eslint/no-explicit-any": "off",
 		"curly": "off",
 		"eqeqeq": "warn",
 		"no-throw-literal": "warn",

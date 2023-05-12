@@ -4,8 +4,8 @@ import * as request from "request"
 import { titleCase } from "title-case"
 import * as vscode from "vscode"
 import { HF_MODEL_DEFAULT } from "../../utils/configuration"
-import { hfRequest, PromptConfig } from "../../utils/types"
-import { log, notif, write } from "../../utils/utils"
+import { HFRequest, PromptConfig } from "../../utils/types"
+import { log, notif, updateChat, write } from "../../utils/utils"
 import { validKey } from "../process/check"
 import { processAPI } from "../process/process"
 
@@ -29,12 +29,14 @@ export async function huggingFaceRequest(
 		inputs: prompt.text,
 	}
 
-	return await startRequest(hfInterface, req, modelName, prompt.nextLine || 0, key, webview)
+	updateChat([{ role: "user", content: prompt.text }])
+	await startRequest(hfInterface, req, modelName, prompt.nextLine || 0, key, webview)
+	return
 }
 
 export async function startRequest(
 	hf: HuggingFace,
-	req: hfRequest,
+	req: HFRequest,
 	modelName: string,
 	nextLine: number,
 	key: string,
@@ -65,21 +67,32 @@ export async function startRequest(
 						return
 					}
 
-					console.log(res.body.error)
-
 					const modelType = res.body.pipeline_tag.toLowerCase()
 
 					if (modelType === "text-generation") {
-						return await hf.textGeneration(req).then((res) => {
-							write(res.generated_text, modelName, webview, nextLine)
-						})
+						await hf
+							.textGeneration(req)
+							.then((res) => {
+								write(res.generated_text, modelName, webview, nextLine)
+								updateChat([{ role: "assistant", content: res.generated_text }])
+							})
+							.catch((error) => {
+								notif(`Hugging Face Error: ${error}`, 20)
+							})
+						return
 					}
 
 					if (modelType === "translation") {
-						return await hf.translation(req).then((res) => {
-							log(res)
-							write(res.translation_text, modelName, webview, nextLine)
-						})
+						await hf
+							.translation(req)
+							.then((res) => {
+								write(res.translation_text, modelName, webview, nextLine)
+								updateChat([{ role: "assistant", content: res.translation_text }])
+							})
+							.catch((error) => {
+								notif(`Hugging Face Error: ${error}`, 20)
+							})
+						return
 					}
 
 					if (modelType === "automatic-speech-recognition") {
@@ -87,9 +100,16 @@ export async function startRequest(
 							model: req.model,
 							data: readFileSync(req.inputs),
 						}
-						return await hf.automaticSpeechRecognition(auidoReq).then((res) => {
-							write(titleCase(res.text), modelName, webview, nextLine)
-						})
+						await hf
+							.automaticSpeechRecognition(auidoReq)
+							.then((res) => {
+								write(titleCase(res.text), modelName, webview, nextLine)
+								updateChat([{ role: "assistant", content: res.text }])
+							})
+							.catch((error) => {
+								notif(`Hugging Face Error: ${error}`, 20)
+							})
+						return
 					}
 
 					notif(

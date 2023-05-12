@@ -1,6 +1,5 @@
 import * as vscode from "vscode"
 import { ACTIVE_PROVIDER, PROVIDERS_DEFAULT } from "../utils/configuration"
-import { model } from "../utils/types"
 
 export function chatHTMl(webview: vscode.Webview, extensionUri: vscode.Uri) {
 	const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, "media", "main.js"))
@@ -98,10 +97,8 @@ export function settings() {
 				<select
 					name="providers"
 					id="providers"
-					selected="${ACTIVE_PROVIDER}"
 				>
 					${PROVIDERS_DEFAULT.map((provider) => {
-						console.log(ACTIVE_PROVIDER, provider.name)
 						return option(provider.name, provider.label)
 					})}
 				</select>
@@ -115,7 +112,7 @@ export function settings() {
 
 				<input
 					name="models"
-					placeholder="${ACTIVE_PROVIDER} model id..."
+					placeholder="${ACTIVE_PROVIDER} name/id..."
 					id="models-text"
 				/>
 			</label>
