@@ -1,11 +1,9 @@
 import * as vscode from "vscode"
 import { chatHTMl } from "./chatHTML"
 import { config } from "../api/config"
-import { PromptConfig, message } from "../utils/types"
-import { clearChat } from "../api/providers/openai"
-import { log } from "../utils/utils"
 import { ChatCompletionRequestMessage } from "openai"
-import { CHAT_LOG } from "../utils/configuration"
+import { Message, MessageHistory } from "../utils/types"
+import { clearChat } from "../utils/utils"
 
 export class ChatWindow implements vscode.WebviewViewProvider {
 	public static readonly viewType = "aikeys.chat"
@@ -29,25 +27,23 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 		webviewView.webview.html = this.getHtmlForWebview(webviewView.webview)
 
 		// Recieve message from javascript
-		webviewView.webview.onDidReceiveMessage(async (message: message) => {
+		webviewView.webview.onDidReceiveMessage(async (message: Message) => {
 			switch (message.command) {
 				case "sendPrompt": {
 					const system = message.data.system
 					const prompt = {
-						text: `${message.data.model} ${message.data.prompt}`,
+						provider: message.data.provider,
+						model: message.data.model,
+						text: message.data.prompt,
 					}
-					console.log(system)
 
 					if (system) {
-						await vscode.workspace.getConfiguration("AI-Keys.openAI").update("system", system)
-
-						const messages = vscode.workspace
-							.getConfiguration("AI-Keys.openAI")
-							.get("messages") as ChatCompletionRequestMessage[]
-
+						const config = vscode.workspace.getConfiguration("AI-Keys.openAI")
+						const messages = config.get("messages") as MessageHistory
 						if (messages.length > 0) messages[0].content = system
 
-						await vscode.workspace.getConfiguration("AI-Keys.openAI").update(`messages`, messages)
+						await config.update("system", system)
+						await config.update(`messages`, messages)
 					}
 
 					await config(prompt, webviewView)
@@ -61,35 +57,46 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 					vscode.commands.executeCommand("aikeys.goToSettings")
 					break
 				}
-				case "viewSettings": {
-					this.hideSettings()
+				case "changeProvider": {
+					const provider = message.data.provider
+
+					await vscode.workspace.getConfiguration("AI-Keys.active").update("provider", provider)
+
+					this.changeProvider(provider as string)
+					break
+				}
+				case "changeModel": {
+					let provider = message.data.provider
+
+					if (provider === "openai") provider = "openAI"
+					if (provider === "huggingface") provider = "huggingFace"
+
+					await vscode.workspace
+						.getConfiguration(`AI-Keys.${provider}`)
+						.update("model", message.data.model)
+					break
+				}
+				case "changeSystem": {
+					await vscode.workspace
+						.getConfiguration(`AI-Keys.openAI`)
+						.update("system", message.data.system)
 					break
 				}
 			}
 		})
 
-		if (this.view?.visible)
-			this.view.webview.postMessage({
-				command: "loadChat",
-				data: {
-					system: vscode.workspace.getConfiguration("AI-Keys.openAI").get("system"),
-					messages: vscode.workspace
-						.getConfiguration("AI-Keys.openAI")
-						.get("messages") as ChatCompletionRequestMessage[],
-				},
-			})
+		if (this.view?.visible) {
+			this.loadChat()
+			this.changeProvider(
+				vscode.workspace.getConfiguration("AI-Keys.active").get("provider") as string
+			)
+		}
 
 		this.view?.onDidChangeVisibility(() => {
-			if (this.view?.visible)
-				this.view.webview.postMessage({
-					command: "loadChat",
-					data: {
-						system: vscode.workspace.getConfiguration("AI-Keys.openAI").get("system"),
-						messages: vscode.workspace
-							.getConfiguration("AI-Keys.openAI")
-							.get("messages") as ChatCompletionRequestMessage[],
-					},
-				})
+			this.loadChat()
+			this.changeProvider(
+				vscode.workspace.getConfiguration("AI-Keys.active").get("provider") as string
+			)
 		})
 	}
 
@@ -97,12 +104,27 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 		return chatHTMl(webview, this.extensionUri)
 	}
 
-	public hideSettings() {
+	public loadChat() {
 		this.view?.webview.postMessage({
-			command: "viewSettings",
-			data: !this.viewSettings,
+			command: "loadChat",
+			data: {
+				system: vscode.workspace.getConfiguration("AI-Keys.openAI").get("system"),
+				messages: vscode.workspace.getConfiguration("AI-Keys").get("messages") as MessageHistory,
+			},
 		})
+	}
 
-		this.viewSettings = !this.viewSettings
+	public changeProvider(provider: string) {
+		if (provider === "openai") provider = "openAI"
+		if (provider === "huggingface") provider = "huggingFace"
+
+		this.view?.webview.postMessage({
+			command: "changeProvider",
+			data: {
+				provider: provider,
+				model: vscode.workspace.getConfiguration(`AI-Keys.${provider}`).get("model"),
+				system: vscode.workspace.getConfiguration("AI-Keys.openAI").get("system"),
+			},
+		})
 	}
 }

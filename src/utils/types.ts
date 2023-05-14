@@ -1,5 +1,9 @@
 import * as vscode from "vscode"
-import { ChatCompletionResponseMessage, CreateChatCompletionRequest } from "openai"
+import {
+	ChatCompletionRequestMessage,
+	ChatCompletionResponseMessage,
+	CreateChatCompletionRequest,
+} from "openai"
 
 export interface GeneralRequest {
 	language: string
@@ -10,32 +14,34 @@ export interface GeneralRequest {
 export interface PromptConfig {
 	text: string
 	nextLine?: number
+	model?: string
+	provider?: string
 }
 
-export interface clarifaiRequest {
+export interface ClarifaiRequest {
 	key: string
 	userID: string
 	modelID: string
 	appID: string
 }
 
-export interface hfRequest {
+export interface HFRequest {
 	model: string
 	inputs: string
 }
 
-export interface model {
+export interface Model {
 	name: string
 	label: string
 }
 
-export interface provider {
+export interface Provider {
 	name: string
 	label: string
-	models: model[] | ""
+	models: Model[] | ""
 }
 
-export interface message {
+export interface Message {
 	command: string
 	data: {
 		model: string
@@ -45,7 +51,19 @@ export interface message {
 	}
 }
 
-export interface chatMessage {
-	message: CreateChatCompletionRequest | ChatCompletionResponseMessage
+export type MessageHistory = [
+	ChatCompletionRequestMessage | ChatCompletionResponseMessage | MessageLog
+]
+
+export type MessageLog =
+	| ChatCompletionRequestMessage
+	| ChatCompletionResponseMessage
+	| {
+			role: string
+			content: string
+	  }
+
+export interface ChatMessage {
+	message: CreateChatCompletionRequest | ChatCompletionResponseMessage | string
 	model?: string
 }

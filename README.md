@@ -16,106 +16,75 @@ Keep control of your keys, usage and costs directly to the model provider.
 
 ## New Features
 
-`Chat Demo (Pre-Release)`
+### Chat
 
 ![Chat](https://github.com/tomcodedthis/AI-Keys/blob/develop/media/gif/aikeys-demo.gif?raw=true)
 
-```md
-Hugging Face Support
+### Hugging Face Support
 
-Change model:
+- Speech to Text *(ensure you've set a automatic-speech-recognition model)*
+` facebook/wav2vec2-large-960h-lv60-self) `
+` hf /PATH/TO/AUDIO/file.mp3 `
+- Text *(ensure you've set a text-based model)* ` gpt2 `
+- Translation *(ensure you've set a translation-based model)* ` t5-base `
+- Change model: ` hf model = gpt2 `
 
-hf model = gpt2
+### OpenAI
 
-Translation (ensure you've set a translation model, e.g. t5-base):
+- Chat (GPT-3.5-Turbo):
+  - Change system role (define how it behaves)
+  - Reset chat (reduce token usage) ` clearChat `
 
-hf hello, how are you?
+- Image Generation (Dalle) ` dalle a smiling dog `
 
-Speech to Text (ensure you've set a automatic-speech-recognition model, e.g. facebook/wav2vec2-large-960h-lv60-self):
+### Clarifai
 
-hf /PATH/TO/AUDIO/file.mp3
-
-```
-
-```md
-Chat using GPT-3.5-Turbo (define how it behaves in your AI-Keys configuration settings):
-
-write a joke
-
-think of a better one
-
-repeat the first one
-
-Reset chat (reduce token usage):
-
-clearChat
-
-```
+- Image Recognintion:
 
 ```md
-Image Recognintion:
-
 clarifai https://samples.clarifai.com/dog2.jpeg
 
 clar /LOCAL/FILE/PATH/image.webp
 ```
 
-```md
-Image Generation:
-
-dalle a smiling dog
-```
-
 ## Features with Examples
 
-```md
-Inline Search:
+- Chat
 
-CMD/CTRL + Enter
+![Chat](https://github.com/tomcodedthis/AI-Keys/blob/develop/media/images/aikeys-chat.png?raw=true)
 
-or
-
-CMD/CTRL + Alt + /
-```
-
-```md
-Specify Model ( optional, unspecified uses default model ):
-
-gpt tell a joke
-
-code-search-ada-code-001 write a function that adds 2 numbers
-```
+- Inline Search ` CMD/CTRL + Enter ` or ` CMD/CTRL + Alt + / `
+- Specify Model *(optional, unspecified uses default model)*:
+` gpt tell a joke `
+` code-search-ada-code-001 write a function that adds 2 numbers `
+- List Supported Models ` CMD/CTRL + ALT + M `
+- Shorthand Arguments (multiline prompts are only supported as comments):
 
 ```md
-List Supported Models:
-
-CMD/CTRL + ALT + M
-```
-
-```md
-Shorthand Arguments (multiline prompts are only supported as comments):
-
 convert / cv
 # cv javascript
 # def add(x, y):
 # return x + y
+```
 
-
+```md
 optimise / op
 // op
 // function add(x, y) {
 // return x + y
 // }
+```
 
+```md
 explain / ex
 # ex
 # def add(x, y):
 # return x + y`
 ```
 
-```md
-Input Box Search:
+- Input Box Search
 
+```md
 CMD/CTRL + Shift + P
 
 AI-Keys: Search Prompt
@@ -125,13 +94,7 @@ AI-Keys: Search Prompt
 
 ## Setup
 
-```md
-Set API Keys and default configuration:
-
-CMD/CTRL + Shift + P
-
-AI-Keys: Open Settings
-```
+- Set API Keys and default configuration ` CMD/CTRL + Shift + P ` ` AI-Keys: Open Settings `
 
 ---
 
@@ -204,6 +167,8 @@ At least one API key from our supported AI sources:
 
 ### [OpenAI](https://platform.openai.com/account/api-keys)
 
+### [Hugging Face](https://huggingface.co/docs/hub/security-tokens)
+
 ### [Clarifai](https://docs.clarifai.com/clarifai-basics/authentication/personal-access-tokens/)
 
 ---
@@ -230,13 +195,17 @@ Features currently being worked on:
 
 ## To-Do
 
-Contributions are widely encouraged, get involved to earn XP
+Contributions are widely encouraged, get involved to earn XP (high/mid/low prioirty)
 
-- Fully operational chat window
-- Write proper tests for pre-release checks
-- Stream response [info](https://github.com/openai/openai-node/issues/18)
-- More models/source integrations
-- More types of generation (tts, video, 3d models)
+- Improved UX of chat window (high)
+- Write proper tests for pre-release checks (high)
+- Add vscode walkthrough (high)
+- Store secret API keys (high)
+- Export as Chrome extension (mid)
+- Export as Logic extension (mid)
+- More models/source integrations (mid)
+- More types of generation (tts, video, 3d models) (mid)
+- Stream response [info](https://github.com/openai/openai-node/issues/18) (low)
 
 ## Known Issues
 

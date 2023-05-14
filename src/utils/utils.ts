@@ -5,7 +5,7 @@ import * as path from "path"
 import { IMAGE_FORMAT_DEFAULT, LINE_LENGTH_DEFAULT } from "./configuration"
 import { getComment } from "../api/process/get"
 import { titleCase } from "title-case"
-import { message } from "./types"
+import { Message, MessageHistory } from "./types"
 
 export function go(setting: string, user = true) {
 	vscode.commands
@@ -56,7 +56,7 @@ export function join(text: string, symbol: string) {
 	return text.split(" ").join(symbol)
 }
 
-export async function download(url: string, prompt: string) {
+export async function download(url: string, prompt: string, webview?: vscode.WebviewView) {
 	const workspaceFolders = vscode.workspace.workspaceFolders
 	if (!workspaceFolders) {
 		notif("No workspace folder to save to")
@@ -64,9 +64,8 @@ export async function download(url: string, prompt: string) {
 		return
 	}
 
-	const editor = vscode.window.activeTextEditor as vscode.TextEditor
 	const comment = getComment()
-	const fileName = `${join(prompt, "-")}.${IMAGE_FORMAT_DEFAULT}`
+	const fileName = `${join(prompt, "_")}.${IMAGE_FORMAT_DEFAULT}`
 	const folderPath = workspaceFolders[0].uri.fsPath
 	const filePath = path.join(folderPath, fileName)
 
@@ -81,12 +80,18 @@ export async function download(url: string, prompt: string) {
 		res.pipe(fileStream)
 
 		fileStream.on("finish", () => {
-			editor.edit((line) => {
-				line.insert(
-					editor.selection.end,
-					`\n${comment}\n${comment} Image downloaded here:\n${comment} ${filePath}\n`
-				)
-			})
+			// const workspaceFolder = folderPath.split("/").at(-1)
+			let message = ""
+
+			if (webview) {
+				message += `Image URL: <a href="${url}">${prompt}</a>\n\n`
+			}
+
+			message += webview
+				? `Image downloaded to your current working directory`
+				: `\n${comment}\n${comment} Image downloaded to your current working directory\n`
+
+			write(message, "assistant", webview)
 
 			log("AI-Keys: Image download success")
 		})
@@ -104,35 +109,69 @@ export function write(
 
 	const editor = vscode.window.activeTextEditor as vscode.TextEditor
 	const comment = getComment()
+	const newLine = ["-", " ", "<"]
 	let lineLength = 0
-
-	const text = res
-		.split("")
-		.slice(aiName === "text-davinci-003" ? 2 : 0)
-		.map((letter) => {
-			lineLength += letter.length
-
-			if (lineLength > LINE_LENGTH_DEFAULT && letter === " ") {
-				letter = `\n${comment} `
-				lineLength = 0
-			}
-
-			return letter === `\n` ? `${letter}${comment} ` : letter
-		})
+	let prevLetter: string
 
 	if (webview) {
 		// Do chat things
-		const message: message = {
+		res = res.replace(/\n(?!\n)/g, "<br>")
+
+		const message: Message = {
 			command: "sendResponse",
 			data: {
 				model: aiName,
 				prompt: res,
 			},
 		}
+
 		webview.webview.postMessage(message)
 	} else {
+		res = res
+			.split("")
+			.slice(aiName === "text-davinci-003" ? 2 : 0)
+			.map((letter) => {
+				lineLength += letter.length
+
+				if (lineLength > LINE_LENGTH_DEFAULT && newLine.includes(letter)) {
+					letter = `\n${comment} `
+					lineLength = 0
+				}
+
+				return letter === `\n` ? `${letter}${comment} ` : letter
+			})
+			.join("")
+
 		editor.edit((editBulder) => {
-			editBulder.insert(new vscode.Position(nextLine || 0, 0), `\n${comment} ${text.join("")}\n`)
+			editBulder.insert(new vscode.Position(nextLine || 0, 0), `\n${comment} ${res}\n`)
 		})
 	}
+
+	updateChat(
+		[
+			{
+				role: "assistant",
+				content: res,
+			},
+		],
+		true
+	)
+}
+
+export function updateChat(entry: MessageHistory, openai?: boolean) {
+	const config = vscode.workspace.getConfiguration("AI-Keys")
+	const prevMsgs = config.get("messages") as MessageHistory
+	const newMsgs = prevMsgs ? prevMsgs.concat(entry) : entry
+
+	config.update("messages", newMsgs)
+
+	if (openai) config.update("openAI.messages", newMsgs)
+}
+
+export function clearChat() {
+	const config = vscode.workspace.getConfiguration("AI-Keys")
+	config.update("messages", [])
+	config.update("openAI.messages", [])
+
+	notif(`AI-Keys: Chat history cleared`, 5)
 }

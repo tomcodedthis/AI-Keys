@@ -1,5 +1,5 @@
 import * as vscode from "vscode"
-import { PromptConfig } from "../../utils/types"
+import { MessageHistory, PromptConfig } from "../../utils/types"
 import {
 	CHAT_LOG,
 	CHAT_SYSTEM_DEFAULT,
@@ -22,7 +22,7 @@ import {
 	ChatCompletionRequestMessage,
 	ChatCompletionResponseMessage,
 } from "openai"
-import { notif, log, download, write } from "../../utils/utils"
+import { notif, log, download, write, updateChat } from "../../utils/utils"
 import { processAPI, processError } from "../process/process"
 import { getComment } from "../process/get"
 import { titleCase } from "title-case"
@@ -35,6 +35,8 @@ export async function openaiRequest(
 ) {
 	const config = vscode.workspace.getConfiguration("AI-Keys")
 	const key = config.get("keys.openai") as string
+	const messageLog: MessageHistory = [{ role: "user", content: prompt.text as string }]
+	const isGPTTurbo = GPT_TURBO_MODELS.some((model) => model === aiName)
 
 	if (!validKey(key)) return
 	if (!aiName) return
@@ -44,7 +46,9 @@ export async function openaiRequest(
 	const openai = processAPI(key) as OpenAIApi
 
 	if (aiName === "dalle") {
-		return await imageRequest(openai, prompt.text, aiName, webview)
+		updateChat(messageLog, true)
+		await imageRequest(openai, prompt.text, aiName, webview)
+		return
 	}
 
 	const req = {
@@ -57,7 +61,7 @@ export async function openaiRequest(
 		stream: false,
 	}
 
-	if (GPT_TURBO_MODELS.some((model) => model === aiName)) {
+	if (isGPTTurbo) {
 		const prevMsgs = config.get("openAI.messages") as ChatCompletionRequestMessage[]
 		let chatReq: CreateChatCompletionRequest
 
@@ -72,13 +76,13 @@ export async function openaiRequest(
 		} else {
 			chatReq = {
 				...req,
-				messages: [...prevMsgs, { role: "user", content: prompt.text as string }],
+				messages: [{ role: "user", content: prompt.text as string }],
 			}
 		}
 
-		updateChat(chatReq.messages)
-
-		return await chatRequest(openai, chatReq, aiName, prompt.nextLine || 0, webview)
+		updateChat(chatReq.messages as MessageHistory, true)
+		await chatRequest(openai, chatReq, aiName, prompt.nextLine || 0, webview)
+		return
 	}
 
 	const textReq: CreateCompletionRequest = {
@@ -86,7 +90,9 @@ export async function openaiRequest(
 		prompt: prompt.text,
 	}
 
-	return await textRequest(openai, textReq, aiName, prompt.nextLine || 0, webview)
+	updateChat(messageLog, true)
+	await textRequest(openai, textReq, aiName, prompt.nextLine || 0, webview)
+	return
 }
 
 export async function chatRequest(
@@ -110,13 +116,7 @@ export async function chatRequest(
 
 					write(res, aiName, webview, nextLine)
 
-					const config = vscode.workspace.getConfiguration("AI-Keys")
-					const prevMsgs = config.get("openAI.messages") as ChatCompletionRequestMessage[]
-
-					updateChat([
-						...prevMsgs,
-						response.data.choices[0].message as ChatCompletionResponseMessage,
-					])
+					updateChat([response.data.choices[0].message] as MessageHistory, true)
 
 					if ((response.data.usage?.total_tokens as number) > TOKEN_WARN_LIMIT) {
 						notif(
@@ -153,7 +153,10 @@ export async function textRequest(
 				.createCompletion(req)
 				.then((response) => {
 					const res = response.data.choices[0].text as string
+
 					write(res, aiName, webview, nextLine)
+
+					updateChat([{ role: "assistant", content: res }] as MessageHistory, true)
 				})
 				.catch((error) => {
 					notif(`OpenAI Error: ${error.response.data.error.message}`, 20)
@@ -186,18 +189,15 @@ export async function imageRequest(
 			await openai
 				.createImage(req)
 				.then(async (response) => {
-					const editor = vscode.window.activeTextEditor as vscode.TextEditor
 					const res = response.data.data[0].url as string
 					const comment = getComment()
 
-					await download(res, prompt).then(() => {
+					await download(res, prompt, webview).then(() => {
 						notif(`Here's your ${aiName.toUpperCase()} image` as string, 5)
 						log("AI-Keys: Response Success")
 
-						write(`\n\n${comment} Image URL link:\n${comment} ${res}`, aiName, webview)
-						editor.edit((line) => {
-							line.insert(editor.selection.end, `\n\n${comment} Image URL link:\n${comment} ${res}`)
-						})
+						if (!webview)
+							write(`\n\n${comment} Image URL link:\n${comment} ${res}`, aiName, webview)
 					})
 				})
 				.catch((error) => {
@@ -207,16 +207,4 @@ export async function imageRequest(
 				})
 		}
 	)
-}
-
-export function updateChat(entry: ChatCompletionRequestMessage[] | ChatCompletionResponseMessage) {
-	const config = vscode.workspace.getConfiguration("AI-Keys")
-	config.update("openAI.messages", entry)
-}
-
-export function clearChat() {
-	const config = vscode.workspace.getConfiguration("AI-Keys")
-	config.update("openAI.messages", [])
-
-	notif(`AI-Keys: GPT Chat cleared`, 5)
 }

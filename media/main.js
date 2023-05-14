@@ -11,35 +11,33 @@
 	}
 
 	const chat = document.getElementById("chat")
-	const btn = document.getElementById("prompt-btn")
+	const sendBtn = document.getElementById("prompt-btn")
 	const prompt = document.getElementById("prompt-text")
 	const system = document.getElementById("system")
 	const providers = document.getElementById("providers")
-	const models = document.getElementById("models")
+	const modelsText = document.getElementById("models-text")
 	const clearChatBtn = document.getElementById("clear-chat-btn")
 	const settingsBtn = document.getElementById("settings-btn")
-	const settingsCont = document.getElementById("settings-cont")
-	const viewSettingsBtn = document.getElementById("view-settings-btn")
-	const hideSettings = document.getElementsByClassName("hide-settings")
-	const copyCont = document.getElementsByClassName("copied-cont")
+	const notifCont = document.getElementById("notif-cont")
+	const toggleBtns = document.getElementsByClassName("toggle-btn")
 
-	let keysDown = []
-	let shortcut = false
-
-	btn?.addEventListener("click", () => {
+	sendBtn.addEventListener("click", () => {
 		sendPrompt()
 	})
-	prompt?.addEventListener("input", () => {
-		vscode.setState({ ...oldState, prompt: prompt?.value })
+	providers.addEventListener("input", () => {
+		vscode.postMessage({ command: "changeProvider", data: { provider: providers.value } })
 	})
-	system?.addEventListener("input", () => {
-		vscode.setState({ ...oldState, system: system?.value })
+	modelsText.addEventListener("input", () => {
+		vscode.postMessage({
+			command: "changeModel",
+			data: {
+				provider: providers.value,
+				model: modelsText.value,
+			},
+		})
 	})
-	providers?.addEventListener("input", () => {
-		vscode.setState({ ...oldState, provider: providers?.value })
-	})
-	models?.addEventListener("input", () => {
-		vscode.setState({ ...oldState, model: models?.value })
+	system.addEventListener("input", () => {
+		vscode.postMessage({ command: "changeSystem", data: { system: system.value } })
 	})
 	prompt.addEventListener("keydown", (event) => {
 		if (event.shiftKey && event.key === "Enter") return
@@ -51,24 +49,41 @@
 	})
 	clearChatBtn.addEventListener("click", () => {
 		vscode.postMessage({ command: "clearChat" })
-
 		chat.replaceChildren()
 	})
 	settingsBtn.addEventListener("click", () => {
 		vscode.postMessage({ command: "goToSettings" })
 	})
-	viewSettingsBtn.addEventListener("click", () => {
-		vscode.postMessage({ command: "viewSettings" })
-	})
-	chat?.addEventListener("click", async (e) => {
+	chat.addEventListener("click", async (e) => {
 		if (!e.target.classList.contains("code-block")) return
-
-		const mousePosition = { x: e.clientX, y: e.clientY }
-		const copyNotif = copiedNotif(mousePosition)
-		const copyText = e.target.innerText
-
-		await copy(copyText, copyNotif)
+		try {
+			await navigator.clipboard.writeText(e.target.innerText)
+			const mousePosition = { x: e.clientX, y: e.clientY }
+			notify("copied", mousePosition, "copy", undefined)
+		} catch (err) {
+			console.error("Failed to copy: ", err)
+		}
 	})
+
+	for (const btn of toggleBtns) {
+		btn.addEventListener("mouseenter", async (e) => {
+			const target = e.target.tagName === "I" ? e.target.parentElement : e.target
+			const pos = target.getBoundingClientRect(target)
+			const mousePosition = { x: pos.x, y: pos.y }
+			const name = target.id
+				.split("-")
+				.filter((word) => {
+					return word !== "btn"
+				})
+				.join(" ")
+				.toUpperCase()
+
+			notify(name, mousePosition, "hover", pos)
+		})
+		btn.addEventListener("mouseout", async (e) => {
+			if (!notifCont.classList.contains("hide")) notifCont.classList.add("hide")
+		})
+	}
 
 	// Recieve message from typescript
 	window.addEventListener("message", (event) => {
@@ -80,29 +95,35 @@
 				chat.scrollTop = chat.scrollHeight
 				break
 			}
-			case "viewSettings": {
-				for (let elem = 0; elem < hideSettings.length; elem += 1) {
-					if (!hideSettings[elem]) return
-					message.data === true
-						? hideSettings[elem].classList.remove("hide")
-						: hideSettings[elem].classList.add("hide")
-				}
-
-				if (message.data === true) {
-					document.body.classList.remove("settings-hidden")
-					settingsCont.classList.remove("settings-hidden")
-				} else {
-					document.body.classList.add("settings-hidden")
-					settingsCont.classList.add("settings-hidden")
-				}
-			}
 			case "loadChat": {
 				const messages = message.data.messages
+
+				if (!messages) return
+
 				messages.forEach((msg) => {
-					chat.appendChild(chatBox(msg.role, `${msg.content}`))
+					if (msg.role === "system") return
+					chat.appendChild(chatBox(msg.role, msg.content))
 				})
 				chat.scrollTop = chat.scrollHeight
 				system.value = message.data.system
+				break
+			}
+			case "changeProvider": {
+				const provider = message.data.provider.toLowerCase()
+				const model = message.data.model
+
+				providers.value = provider
+				modelsText.value = model
+				modelsText.placeholder = `${provider} model id...`
+
+				if (provider === "openai") {
+					system.parentElement.classList.remove("hide")
+					document.body.classList.remove("system-hidden")
+					break
+				}
+
+				system.parentElement.classList.add("hide")
+				document.body.classList.add("system-hidden")
 				break
 			}
 		}
@@ -111,46 +132,26 @@
 	function sendPrompt() {
 		vscode.setState({ ...oldState, idle: false })
 
-		// switchIcon()
-
 		const formData = {
 			system: system.value,
 			provider: providers.value,
-			model: models.value,
+			model: modelsText.value,
 			prompt: prompt.value,
 		}
 
 		// Send message to typescript
 		vscode.postMessage({ command: "sendPrompt", data: formData })
 
-		chat.appendChild(chatBox("User", `${formData.prompt}`))
+		chat.appendChild(chatBox("user", `${formData.prompt}`))
 		chat.scrollTop = chat.scrollHeight
-
-		setTimeout(() => {
-			vscode.setState({ ...oldState, idle: true })
-			// switchIcon()
-		}, 5000)
 	}
-
-	// function switchIcon() {
-	// 	const icon = document.getElementById("icon")
-	// 	const gif = document.getElementById("gif")
-
-	// 	if (vscode.getState().idle === false) {
-	// 		icon.hidden = true
-	// 		gif.hidden = false
-	// 		return
-	// 	}
-
-	// 	icon.hidden = false
-	// 	gif.hidden = true
-	// }
 
 	function chatBox(speaker, text) {
 		let msgs = []
 		let isCode = false
 
 		text.split("```").forEach((section) => {
+			section = section.split("\n").join("\n")
 			isCode
 				? msgs.push({ type: "code", text: section })
 				: msgs.push({ type: "normal", text: section })
@@ -178,34 +179,47 @@
 	}
 
 	function chatMessage(msg) {
-		const textCont = document.createElement("span")
-		textCont.classList.add(msg.type === "code" ? "code-block" : "text-block")
-		textCont.innerHTML = msg.text
+		const isCode = msg.type === "code"
+		const COMMON_PROGRAMING_LANGUAGES = [
+			"javascript",
+			"typescript",
+			"python",
+			"css",
+			"html",
+			"c++",
+			"c#",
+			"c",
+		]
+		const textCont = document.createElement(isCode ? "code" : "div")
+		let firstWord = msg.text.split(" ")[0].split("\n")[0].split("<br>")[0].trim()
 
-		return textCont
-	}
+		textCont.classList.add(isCode ? "code-block" : "text-block")
 
-	function copiedNotif(mousePosition) {
-		const textCont = copyCont.length > 0 ? copyCont[0] : document.createElement("span")
+		if (isCode && COMMON_PROGRAMING_LANGUAGES.includes(firstWord)) {
+			msg.text = msg.text.replace(`${firstWord}`, " ").trim()
+			msg.text = msg.text.replace(`<br><br>`, " ").trim()
 
-		textCont.classList.add("copied-cont")
-		textCont.innerHTML = "copied"
-		textCont.style.left = `${mousePosition.x}px`
-		textCont.style.top = `${mousePosition.y}px`
-
-		return textCont
-	}
-
-	async function copy(text, copyNotif) {
-		try {
-			await navigator.clipboard.writeText(text)
-
-			chat.appendChild(copyNotif)
-			setTimeout(() => {
-				if (copyNotif.parentElement === chat) chat.removeChild(copyNotif)
-			}, 1500)
-		} catch (err) {
-			console.error("Failed to copy: ", err)
+			firstWord = msg.text.split(">")[0]
+			if (firstWord === "<br" || firstWord === "\n")
+				msg.text = msg.text.split(">").slice(1).join(">")
 		}
+
+		textCont.innerHTML = msg.text.trim()
+
+		return textCont
+	}
+
+	function notify(text, mousePosition, type, target) {
+		notifCont.innerText = text
+		notifCont.style.left = `${mousePosition.x}px`
+		notifCont.style.top = `${mousePosition.y - 25}px`
+
+		target ? (notifCont.style.width = `${target.width}px`) : (notifCont.style.width = "fit-content")
+
+		if (notifCont.classList.contains("hide")) notifCont.classList.remove("hide")
+		if (type === "copy")
+			setTimeout(() => {
+				if (!notifCont.classList.contains("hide")) notifCont.classList.add("hide")
+			}, 1500)
 	}
 })()

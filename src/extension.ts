@@ -4,9 +4,8 @@ import { config } from "./api/config"
 import { PromptConfig } from "./utils/types"
 import { processLine } from "./api/process/process"
 import { activeEditor } from "./api/process/check"
-import { go, log, notif } from "./utils/utils"
+import { clearChat, go, log, notif } from "./utils/utils"
 import { listModels } from "./api/providers/models"
-import { clearChat } from "./api/providers/openai"
 import { ChatWindow } from "./components/chat"
 
 export function activate(context: vscode.ExtensionContext) {

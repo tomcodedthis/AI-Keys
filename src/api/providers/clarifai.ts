@@ -3,20 +3,26 @@ import * as request from "request"
 import { titleCase } from "title-case"
 import { getComment, getLocalImage } from "../process/get"
 import { validImage, validKey } from "../process/check"
-import { go, log, notif } from "../../utils/utils"
-import { MODEL_ID_DEFAULT, MODEL_TYPE_DEFAULT } from "../../utils/configuration"
-import { clarifaiRequest } from "../../utils/types"
+import { go, log, notif, write, updateChat } from "../../utils/utils"
+import { CLARIFAI_MODEL_DEFAULT, CLARIFAI_MODEL_TYPE } from "../../utils/configuration"
+import { ClarifaiRequest, MessageHistory } from "../../utils/types"
 
-export async function clarifaiRequest(prompt: string) {
+export async function clarifaiRequest(
+	prompt: string,
+	model?: string,
+	webview?: vscode.WebviewView
+) {
 	const config = vscode.workspace.getConfiguration("AI-Keys")
 	const key = config.get("keys.clarifai") as string
 	const clarifai = {
 		key: key,
 		userID: "",
-		modelID: MODEL_ID_DEFAULT,
+		modelID: model ? model : CLARIFAI_MODEL_DEFAULT,
 		appID: "",
 	}
 	let image
+
+	updateChat([{ role: "user", content: prompt }])
 
 	if (!validKey(key)) return
 	if (!validImage(prompt)) return
@@ -25,14 +31,15 @@ export async function clarifaiRequest(prompt: string) {
 
 	log(`Your final prompt: ${prompt}\nSent to: Clarifai`)
 
-	if (MODEL_TYPE_DEFAULT === "Image Recognition")
-		await imageRecognitionRequest(prompt, image as string, clarifai)
+	if (CLARIFAI_MODEL_TYPE === "Image Recognition")
+		await imageRecognitionRequest(prompt, image as string, clarifai, webview)
 }
 
 export async function imageRecognitionRequest(
 	prompt: string,
 	image: string,
-	clarifai: clarifaiRequest
+	clarifai: ClarifaiRequest,
+	webview?: vscode.WebviewView
 ) {
 	const editor = vscode.window.activeTextEditor as vscode.TextEditor
 	const comment = getComment()
@@ -40,7 +47,7 @@ export async function imageRecognitionRequest(
 	await vscode.window.withProgress(
 		{
 			location: vscode.ProgressLocation.Notification,
-			title: `${titleCase("Clarifai")} is thinking of a response...` as string,
+			title: `${titleCase(clarifai.modelID)} is thinking of a response...` as string,
 			cancellable: false,
 		},
 		async () => {
@@ -86,30 +93,27 @@ export async function imageRecognitionRequest(
 						return
 					}
 
+					log("AI-Keys: Response Success")
+
 					const concepts = res.body.outputs[0].data.concepts
 					const conceptList: string[] = []
 
-					editor
-						.edit((line) => {
-							line.insert(editor.selection.end, `\n\n${comment} Clarifai thinks ${prompt} is:`)
-						})
-						.then(() => {
-							notif(`Here's what Clarifai thinks` as string, 5)
-							log("AI-Keys: Response Success")
+					for (const concept of concepts) {
+						if (conceptList.length >= 10) break
 
-							for (const concept of concepts) {
-								if (conceptList.length >= 10) break
+						const name = titleCase(concept.name)
+						const value = (concept.value * 100).toFixed(2)
 
-								const name = titleCase(concept.name)
-								const value = (concept.value * 100).toFixed(2)
+						conceptList.push(
+							webview
+								? `${name} (${value}%)<br>`
+								: `\n\n${comment} ${clarifai.modelID} thinks ${prompt} is:` +
+										`\n${comment} ${name} (${value}%)`
+						)
+					}
 
-								conceptList.push(`\n${comment} ${name} (${value}%)`)
-							}
-
-							editor.edit((line) => {
-								line.insert(editor.selection.end, conceptList.join(""))
-							})
-						})
+					write(conceptList.join(""), clarifai.modelID, webview)
+					updateChat([{ role: "assistant", content: conceptList.join("") }])
 				})
 			} catch (error: any) {
 				notif(`Clarifai Error: ${error.response.data.error}`, 20)

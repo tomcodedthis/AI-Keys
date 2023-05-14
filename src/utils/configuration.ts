@@ -1,6 +1,6 @@
 import { ChatCompletionRequestMessage } from "openai"
 import * as vscode from "vscode"
-import { provider } from "./types"
+import { Provider } from "./types"
 
 //  Shared
 export const MODEL_DEFAULT = vscode.workspace
@@ -35,10 +35,10 @@ export const TOKEN_WARN_LIMIT = vscode.workspace
 	.get("tokenWarn") as number
 
 // Clarifai
-export const MODEL_TYPE_DEFAULT = vscode.workspace
+export const CLARIFAI_MODEL_TYPE = vscode.workspace
 	.getConfiguration("AI-Keys")
 	.get("clarifai.modelType") as string
-export const MODEL_ID_DEFAULT = vscode.workspace
+export const CLARIFAI_MODEL_DEFAULT = vscode.workspace
 	.getConfiguration("AI-Keys")
 	.get("clarifai.modelID") as string
 
@@ -74,7 +74,7 @@ export const ARGS_SUPPORTED = {
 	model: ["model", "mod"],
 }
 export const CONVERT_DEFAULT = "javascript"
-export const PROVIDERS_DEFAULT: provider[] = [
+export const PROVIDERS_DEFAULT: Provider[] = [
 	{
 		name: "openai",
 		label: "Open AI",
