@@ -1,5 +1,9 @@
 import * as vscode from "vscode"
-import { ChatCompletionRequestMessage, ChatCompletionResponseMessage, CreateChatCompletionRequest } from "openai"
+import {
+	ChatCompletionRequestMessage,
+	ChatCompletionResponseMessage,
+	CreateChatCompletionRequest,
+} from "openai"
 
 export interface GeneralRequest {
 	language: string
@@ -48,17 +52,16 @@ export interface Message {
 }
 
 export type MessageHistory = [
-	ChatCompletionRequestMessage
-	| ChatCompletionResponseMessage
-	| MessageLog
+	ChatCompletionRequestMessage | ChatCompletionResponseMessage | MessageLog
 ]
 
-export type MessageLog = ChatCompletionRequestMessage
-| ChatCompletionResponseMessage
-| {
-	role: string,
-	content: string,
-}
+export type MessageLog =
+	| ChatCompletionRequestMessage
+	| ChatCompletionResponseMessage
+	| {
+			role: string
+			content: string
+	  }
 
 export interface ChatMessage {
 	message: CreateChatCompletionRequest | ChatCompletionResponseMessage | string

@@ -56,7 +56,7 @@ export function join(text: string, symbol: string) {
 	return text.split(" ").join(symbol)
 }
 
-export async function download(url: string, prompt: string, webview? : vscode.WebviewView) {
+export async function download(url: string, prompt: string, webview?: vscode.WebviewView) {
 	const workspaceFolders = vscode.workspace.workspaceFolders
 	if (!workspaceFolders) {
 		notif("No workspace folder to save to")
@@ -90,7 +90,7 @@ export async function download(url: string, prompt: string, webview? : vscode.We
 			message += webview
 				? `Image downloaded to your current working directory`
 				: `\n${comment}\n${comment} Image downloaded to your current working directory\n`
-			
+
 			write(message, "assistant", webview)
 
 			log("AI-Keys: Image download success")
@@ -143,23 +143,22 @@ export function write(
 			.join("")
 
 		editor.edit((editBulder) => {
-			editBulder.insert(
-				new vscode.Position(nextLine || 0, 0),
-				`\n${comment} ${res}\n`
-			)
+			editBulder.insert(new vscode.Position(nextLine || 0, 0), `\n${comment} ${res}\n`)
 		})
 	}
 
-	updateChat([{
-		role: "assistant",
-		content: res
-	}], true)
+	updateChat(
+		[
+			{
+				role: "assistant",
+				content: res,
+			},
+		],
+		true
+	)
 }
 
-export function updateChat(
-	entry: MessageHistory,
-	openai?: boolean
-) {
+export function updateChat(entry: MessageHistory, openai?: boolean) {
 	const config = vscode.workspace.getConfiguration("AI-Keys")
 	const prevMsgs = config.get("messages") as MessageHistory
 	const newMsgs = prevMsgs ? prevMsgs.concat(entry) : entry

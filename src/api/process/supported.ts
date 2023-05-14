@@ -3,8 +3,7 @@ import { getModels } from "../providers/models"
 
 export async function supportedModel(promptArray: string[], check: string) {
 	if (check === "default") {
-		return promptArray.some(
-			(word) => Object.keys(MODELS_DEFAULT).includes(word))
+		return promptArray.some((word) => Object.keys(MODELS_DEFAULT).includes(word))
 	}
 
 	if (check === "openai") {

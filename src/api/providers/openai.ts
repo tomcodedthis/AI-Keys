@@ -76,9 +76,7 @@ export async function openaiRequest(
 		} else {
 			chatReq = {
 				...req,
-				messages: [
-					{ role: "user", content: prompt.text as string }
-				],
+				messages: [{ role: "user", content: prompt.text as string }],
 			}
 		}
 
@@ -118,10 +116,7 @@ export async function chatRequest(
 
 					write(res, aiName, webview, nextLine)
 
-					updateChat(
-						[response.data.choices[0].message] as MessageHistory,
-						true
-					)
+					updateChat([response.data.choices[0].message] as MessageHistory, true)
 
 					if ((response.data.usage?.total_tokens as number) > TOKEN_WARN_LIMIT) {
 						notif(
@@ -161,10 +156,7 @@ export async function textRequest(
 
 					write(res, aiName, webview, nextLine)
 
-					updateChat(
-						[{ role: "assistant", content: res}] as MessageHistory,
-						true
-					)
+					updateChat([{ role: "assistant", content: res }] as MessageHistory, true)
 				})
 				.catch((error) => {
 					notif(`OpenAI Error: ${error.response.data.error.message}`, 20)
@@ -204,7 +196,8 @@ export async function imageRequest(
 						notif(`Here's your ${aiName.toUpperCase()} image` as string, 5)
 						log("AI-Keys: Response Success")
 
-						if (!webview) write(`\n\n${comment} Image URL link:\n${comment} ${res}`, aiName, webview)
+						if (!webview)
+							write(`\n\n${comment} Image URL link:\n${comment} ${res}`, aiName, webview)
 					})
 				})
 				.catch((error) => {

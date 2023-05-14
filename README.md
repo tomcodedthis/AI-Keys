@@ -23,7 +23,7 @@ Keep control of your keys, usage and costs directly to the model provider.
 ### Hugging Face Support
 
 - Speech to Text *(ensure you've set a automatic-speech-recognition model)*
-` facebook/wav2vec2-large-960h-lv60-self) ` 
+` facebook/wav2vec2-large-960h-lv60-self) `
 ` hf /PATH/TO/AUDIO/file.mp3 `
 - Text *(ensure you've set a text-based model)* ` gpt2 `
 - Translation *(ensure you've set a translation-based model)* ` t5-base `

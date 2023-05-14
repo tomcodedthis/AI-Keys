@@ -39,7 +39,7 @@ export async function imageRecognitionRequest(
 	prompt: string,
 	image: string,
 	clarifai: ClarifaiRequest,
-	webview?: vscode.WebviewView,
+	webview?: vscode.WebviewView
 ) {
 	const editor = vscode.window.activeTextEditor as vscode.TextEditor
 	const comment = getComment()
@@ -73,48 +73,47 @@ export async function imageRecognitionRequest(
 					body: data,
 				}
 
-				request
-					.post(options, async (error, res) => {
-						if (error || !res) {
-							notif(`Clarifai Error: ${error.name}`, 20)
-							log(`AI-Keys: Clarifai Error $${error.code}`)
-							return
-						}
+				request.post(options, async (error, res) => {
+					if (error || !res) {
+						notif(`Clarifai Error: ${error.name}`, 20)
+						log(`AI-Keys: Clarifai Error $${error.code}`)
+						return
+					}
 
-						if (res.body.status.code !== 10000) {
-							const stausCode = res.body.status.code
-							let message = `Clarifai Error ${stausCode}: ${res.body.status.description}`
+					if (res.body.status.code !== 10000) {
+						const stausCode = res.body.status.code
+						let message = `Clarifai Error ${stausCode}: ${res.body.status.description}`
 
-							if (stausCode === 10020) message += ", usually due to incorrect prompt/image"
-							if (stausCode === 11008) go("aikeys.keys")
+						if (stausCode === 10020) message += ", usually due to incorrect prompt/image"
+						if (stausCode === 11008) go("aikeys.keys")
 
-							notif(message, 20)
-							log(`AI-Keys: Clarifai Error ${stausCode}`)
+						notif(message, 20)
+						log(`AI-Keys: Clarifai Error ${stausCode}`)
 
-							return
-						}
+						return
+					}
 
-						log("AI-Keys: Response Success")
+					log("AI-Keys: Response Success")
 
-						const concepts = res.body.outputs[0].data.concepts
-						const conceptList: string[] = []
+					const concepts = res.body.outputs[0].data.concepts
+					const conceptList: string[] = []
 
-						for (const concept of concepts) {
-							if (conceptList.length >= 10) break
+					for (const concept of concepts) {
+						if (conceptList.length >= 10) break
 
-							const name = titleCase(concept.name)
-							const value = (concept.value * 100).toFixed(2)
+						const name = titleCase(concept.name)
+						const value = (concept.value * 100).toFixed(2)
 
-							conceptList.push(
-								webview
-									?	`${name} (${value}%)<br>`
-									:	`\n\n${comment} ${clarifai.modelID} thinks ${prompt} is:`
-										+ `\n${comment} ${name} (${value}%)`
-							)
-						}
-						
-						write(conceptList.join(""), clarifai.modelID, webview)
-						updateChat([{ role: "assistant", content: conceptList.join("") }])
+						conceptList.push(
+							webview
+								? `${name} (${value}%)<br>`
+								: `\n\n${comment} ${clarifai.modelID} thinks ${prompt} is:` +
+										`\n${comment} ${name} (${value}%)`
+						)
+					}
+
+					write(conceptList.join(""), clarifai.modelID, webview)
+					updateChat([{ role: "assistant", content: conceptList.join("") }])
 				})
 			} catch (error: any) {
 				notif(`Clarifai Error: ${error.response.data.error}`, 20)

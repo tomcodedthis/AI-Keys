@@ -41,7 +41,7 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 						const config = vscode.workspace.getConfiguration("AI-Keys.openAI")
 						const messages = config.get("messages") as MessageHistory
 						if (messages.length > 0) messages[0].content = system
-						
+
 						await config.update("system", system)
 						await config.update(`messages`, messages)
 					}
@@ -60,9 +60,7 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 				case "changeProvider": {
 					const provider = message.data.provider
 
-					await vscode.workspace
-						.getConfiguration("AI-Keys.active")
-						.update("provider", provider)
+					await vscode.workspace.getConfiguration("AI-Keys.active").update("provider", provider)
 
 					this.changeProvider(provider as string)
 					break
@@ -111,9 +109,7 @@ export class ChatWindow implements vscode.WebviewViewProvider {
 			command: "loadChat",
 			data: {
 				system: vscode.workspace.getConfiguration("AI-Keys.openAI").get("system"),
-				messages: vscode.workspace
-					.getConfiguration("AI-Keys")
-					.get("messages") as MessageHistory,
+				messages: vscode.workspace.getConfiguration("AI-Keys").get("messages") as MessageHistory,
 			},
 		})
 	}

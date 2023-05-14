@@ -35,10 +35,7 @@ export async function config(prompt: PromptConfig, webview?: WebviewView) {
 		if (isDefaultModel) {
 			provider = getModel(argArray)
 			model = provider
-			prompt.text = removeArg(
-				Object.keys(MODELS_DEFAULT),
-				prompt.text
-			)
+			prompt.text = removeArg(Object.keys(MODELS_DEFAULT), prompt.text)
 		}
 
 		if (isOpenAIModel) {
@@ -50,7 +47,8 @@ export async function config(prompt: PromptConfig, webview?: WebviewView) {
 			const arg = getArg(argArray)
 			prompt.text = processArg(arg, prompt.text)
 
-			if (ARGS_SUPPORTED.chatReset.some((supported) => {
+			if (
+				ARGS_SUPPORTED.chatReset.some((supported) => {
 					return supported === arg
 				})
 			) {
@@ -78,7 +76,7 @@ export async function config(prompt: PromptConfig, webview?: WebviewView) {
 			await huggingFaceRequest(prompt.model, prompt, webview)
 			return
 		}
-		
+
 		if (supportedArg(argArray)) {
 			const arg = getArg(argArray)
 
