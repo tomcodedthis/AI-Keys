@@ -144,10 +144,6 @@
 
 		chat.appendChild(chatBox("user", `${formData.prompt}`))
 		chat.scrollTop = chat.scrollHeight
-
-		setTimeout(() => {
-			vscode.setState({ ...oldState, idle: true })
-		}, 5000)
 	}
 
 	function chatBox(speaker, text) {
@@ -183,8 +179,21 @@
 	}
 
 	function chatMessage(msg) {
-		const textCont = document.createElement("div")
-		textCont.classList.add(msg.type === "code" ? "code-block" : "text-block")
+		const isCode = msg.type === "code"
+		const COMMON_PROGRAMING_LANGUAGES = ["javascript", "typescript", "python", "css", "html", "c++", "c#", "c"]
+		const textCont = document.createElement(isCode ? "code": "div")
+		let firstWord = msg.text.split(" ")[0].split("\n")[0].split("<br>")[0].trim()
+
+		textCont.classList.add(isCode ? "code-block" : "text-block")
+
+		if (isCode && COMMON_PROGRAMING_LANGUAGES.includes(firstWord)) {
+			msg.text = msg.text.replace(`${firstWord}`, " ").trim()
+			msg.text = msg.text.replace(`<br><br>`, " ").trim()
+
+			firstWord = msg.text.split(">")[0]
+			if (firstWord === "<br" || firstWord === "\n") msg.text = msg.text.split(">").slice(1).join(">")
+		}
+	
 		textCont.innerHTML = msg.text.trim()
 
 		return textCont

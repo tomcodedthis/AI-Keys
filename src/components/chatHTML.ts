@@ -65,14 +65,14 @@ export function chat() {
 					</button>
 				</a>
 
-				<button 
+				<button
 					id="clear-chat-btn"
 					class="toggle-btn"
 				>
 					<i class="fa-solid fa-ban fa-lg toggle-btn"></i>
 				</button>
 
-				<button 
+				<button
 					id="settings-btn"
 					class="toggle-btn"
 				>

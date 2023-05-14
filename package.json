@@ -71,7 +71,8 @@
 							"GPT-3.5-TURBO",
 							"GPT-3",
 							"DALLE",
-							"Clarifai"
+							"Clarifai",
+							"HuggingFace"
 						],
 						"enumDescriptions": [
 							"Chat Completion",

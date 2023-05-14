@@ -14,42 +14,49 @@ import { clarifaiRequest } from "./providers/clarifai"
 import { huggingFaceRequest } from "./providers/huggingFace"
 import { getModels } from "./providers/models"
 import { openaiRequest } from "./providers/openai"
+import { supportedArg, supportedModel } from "./process/supported"
 
 export async function config(prompt: PromptConfig, webview?: WebviewView) {
 	const argArray = prompt.text.trim().split(" ").slice(0, 5)
 	const models = (await getModels()) as string[]
-	let provider = MODELS_DEFAULT[MODEL_DEFAULT.toLowerCase()]
-	let model =  MODELS_DEFAULT[MODEL_DEFAULT.toLowerCase()]
+	let provider = prompt.provider || MODELS_DEFAULT[MODEL_DEFAULT.toLowerCase()]
+	let model = prompt.model || MODELS_DEFAULT[MODEL_DEFAULT.toLowerCase()]
 
-	if (prompt.model) argArray.push(prompt.model)
+	if (prompt.model) argArray.push(model)
 
 	// from first 4 words, use the last occurance of a model or arg
 	// to-do: multiple args
-	if (await supportedModel(argArray, "default")) {
-		provider = getModel(argArray)
-		model = provider
-		prompt.text = removeArg(Object.keys(MODELS_DEFAULT), prompt.text)
-	} else if (await supportedModel(argArray, "openai")) {
-		model = getModel(argArray, models)
-		prompt.text = removeArg(models, prompt.text)
-	}
 
-	if (webview && prompt.model && prompt.provider) {
-		provider = prompt.provider
-		model = prompt.model
-		console.log(`Provider: ${provider}\nModel: ${model}`)
-	}
+	if (!webview) {
+		const isDefaultModel = await supportedModel(argArray, "default")
+		const isOpenAIModel = await supportedModel(argArray, "openai")
+		const isArgument = supportedArg(argArray)
 
-	if (!webview &&	supportedArg(argArray)) {
-		const arg = getArg(argArray)
-		prompt.text = processArg(arg, prompt.text)
+		if (isDefaultModel) {
+			provider = getModel(argArray)
+			model = provider
+			prompt.text = removeArg(
+				Object.keys(MODELS_DEFAULT),
+				prompt.text
+			)
+		}
 
-		if (ARGS_SUPPORTED.chatReset.some((supported) => {
-				return supported === arg
-			})
-		) {
-			clearChat()
-			return
+		if (isOpenAIModel) {
+			model = getModel(argArray, models)
+			prompt.text = removeArg(models, prompt.text)
+		}
+
+		if (isArgument) {
+			const arg = getArg(argArray)
+			prompt.text = processArg(arg, prompt.text)
+
+			if (ARGS_SUPPORTED.chatReset.some((supported) => {
+					return supported === arg
+				})
+			) {
+				clearChat()
+				return
+			}
 		}
 	}
 
@@ -67,6 +74,11 @@ export async function config(prompt: PromptConfig, webview?: WebviewView) {
 
 	if (provider === "huggingface") {
 		//  Set model
+		if (prompt.model) {
+			await huggingFaceRequest(prompt.model, prompt, webview)
+			return
+		}
+		
 		if (supportedArg(argArray)) {
 			const arg = getArg(argArray)
 
@@ -82,6 +94,7 @@ export async function config(prompt: PromptConfig, webview?: WebviewView) {
 				}
 
 				setModel("huggingFace", newModel, "Hugging Face")
+				await huggingFaceRequest(newModel, prompt, webview)
 				return
 			}
 		}
@@ -90,29 +103,7 @@ export async function config(prompt: PromptConfig, webview?: WebviewView) {
 		return
 	}
 
+	model = getModel([model], models)
+
 	await openaiRequest(model, prompt, webview)
-}
-
-export async function supportedModel(promptArray: string[], check: string) {
-	if (check === "default") {
-		return promptArray.some(
-			(word) => Object.keys(MODELS_DEFAULT).includes(word))
-	}
-
-	if (check === "openai") {
-		const models = (await getModels()) as string[]
-		return promptArray.some((word) => models.includes(word))
-	}
-
-	return false
-}
-
-export function supportedArg(promptArray: string[]) {
-	if (
-		promptArray.some((word) =>
-			Object.values(ARGS_SUPPORTED).some((argArray) => argArray.includes(word))
-		)
-	)
-		return true
-	return false
 }

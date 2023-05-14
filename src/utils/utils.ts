@@ -80,21 +80,18 @@ export async function download(url: string, prompt: string, webview? : vscode.We
 		res.pipe(fileStream)
 
 		fileStream.on("finish", () => {
+			// const workspaceFolder = folderPath.split("/").at(-1)
 			let message = ""
 
 			if (webview) {
-				message += `<p>Image URL here: <a href="${url}">${prompt}</a></p><br><br>`
+				message += `Image URL: <a href="${url}">${prompt}</a>\n\n`
 			}
 
 			message += webview
-				? `Image downloaded here: ${filePath}`
-				: `\n${comment}\n${comment} Image downloaded here:\n${comment} ${filePath}\n`
+				? `Image downloaded to your current working directory`
+				: `\n${comment}\n${comment} Image downloaded to your current working directory\n`
 			
 			write(message, "assistant", webview)
-			updateChat([{
-				role: "assistant",
-				content: message
-			}], true)
 
 			log("AI-Keys: Image download success")
 		})
@@ -112,24 +109,14 @@ export function write(
 
 	const editor = vscode.window.activeTextEditor as vscode.TextEditor
 	const comment = getComment()
+	const newLine = ["-", " ", "<"]
 	let lineLength = 0
-
-	const text = res
-		.split("")
-		.slice(aiName === "text-davinci-003" ? 2 : 0)
-		.map((letter) => {
-			lineLength += letter.length
-
-			if (lineLength > LINE_LENGTH_DEFAULT && letter === " ") {
-				letter = `\n${comment} `
-				lineLength = 0
-			}
-
-			return letter === `\n` ? `${letter}${comment} ` : letter
-		})
+	let prevLetter: string
 
 	if (webview) {
 		// Do chat things
+		res = res.replace(/\n(?!\n)/g, "<br>")
+
 		const message: Message = {
 			command: "sendResponse",
 			data: {
@@ -137,12 +124,36 @@ export function write(
 				prompt: res,
 			},
 		}
+
 		webview.webview.postMessage(message)
 	} else {
+		res = res
+			.split("")
+			.slice(aiName === "text-davinci-003" ? 2 : 0)
+			.map((letter) => {
+				lineLength += letter.length
+
+				if (lineLength > LINE_LENGTH_DEFAULT && newLine.includes(letter)) {
+					letter = `\n${comment} `
+					lineLength = 0
+				}
+
+				return letter === `\n` ? `${letter}${comment} ` : letter
+			})
+			.join("")
+
 		editor.edit((editBulder) => {
-			editBulder.insert(new vscode.Position(nextLine || 0, 0), `\n${comment} ${text.join("")}\n`)
+			editBulder.insert(
+				new vscode.Position(nextLine || 0, 0),
+				`\n${comment} ${res}\n`
+			)
 		})
 	}
+
+	updateChat([{
+		role: "assistant",
+		content: res
+	}], true)
 }
 
 export function updateChat(

@@ -36,6 +36,7 @@ export async function openaiRequest(
 	const config = vscode.workspace.getConfiguration("AI-Keys")
 	const key = config.get("keys.openai") as string
 	const messageLog: MessageHistory = [{ role: "user", content: prompt.text as string }]
+	const isGPTTurbo = GPT_TURBO_MODELS.some((model) => model === aiName)
 
 	if (!validKey(key)) return
 	if (!aiName) return
@@ -60,7 +61,7 @@ export async function openaiRequest(
 		stream: false,
 	}
 
-	if (GPT_TURBO_MODELS.some((model) => model === aiName)) {
+	if (isGPTTurbo) {
 		const prevMsgs = config.get("openAI.messages") as ChatCompletionRequestMessage[]
 		let chatReq: CreateChatCompletionRequest
 
@@ -157,8 +158,13 @@ export async function textRequest(
 				.createCompletion(req)
 				.then((response) => {
 					const res = response.data.choices[0].text as string
+
 					write(res, aiName, webview, nextLine)
-					updateChat([{ role: "assistant", content: res}], true)
+
+					updateChat(
+						[{ role: "assistant", content: res}] as MessageHistory,
+						true
+					)
 				})
 				.catch((error) => {
 					notif(`OpenAI Error: ${error.response.data.error.message}`, 20)

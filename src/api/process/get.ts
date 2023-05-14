@@ -7,6 +7,7 @@ import {
 	MODELS_DEFAULT,
 	ARGS_SUPPORTED,
 } from "../../utils/configuration"
+import { titleCase } from "title-case"
 
 export function getPrompt(prompt: vscode.TextLine) {
 	if (prompt.isEmptyOrWhitespace || !prompt) {
@@ -21,10 +22,7 @@ export function getPrompt(prompt: vscode.TextLine) {
 
 export function getLanguage() {
 	const editor = vscode.window.activeTextEditor
-	if (!editor) {
-		log("AI-Keys: No text editor")
-		return
-	}
+	if (!editor) return
 
 	return editor.document.languageId
 }
@@ -40,19 +38,22 @@ export const getComment = () => {
 }
 
 export function getModel(promptArray: string[], fullList = [""]) {
+	const modelDefault = MODELS_DEFAULT[MODEL_DEFAULT.toLowerCase()]
 	let model = ""
 
 	promptArray.some((word) => {
+		word = word.toLowerCase()
+
 		if (fullList.includes(word)) model = word
 		if (Object.keys(MODELS_DEFAULT).includes(word)) model = MODELS_DEFAULT[word]
 	})
 
 	if (model.length > 0) return model
 
-	notif(`AI-Keys: Unrecognised model, switching to default ${MODELS_DEFAULT[MODEL_DEFAULT]}`)
+	notif(`AI-Keys: Unrecognised model, switching to default ${titleCase(modelDefault)}`)
 	log(`AI-Keys: Model not recognised`)
 
-	return MODELS_DEFAULT[MODEL_DEFAULT]
+	return modelDefault
 }
 
 export function getArg(promptArray: string[]) {
