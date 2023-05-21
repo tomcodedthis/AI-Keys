@@ -114,7 +114,7 @@ export async function chatRequest(
 				.then((response) => {
 					const res = response.data.choices[0].message?.content as string
 
-					write(res, aiName, webview, nextLine)
+					write(res, aiName, webview, "openai", nextLine)
 
 					updateChat([response.data.choices[0].message] as MessageHistory, true)
 
@@ -154,7 +154,7 @@ export async function textRequest(
 				.then((response) => {
 					const res = response.data.choices[0].text as string
 
-					write(res, aiName, webview, nextLine)
+					write(res, aiName, webview, "openai", nextLine)
 
 					updateChat([{ role: "assistant", content: res }] as MessageHistory, true)
 				})
@@ -197,7 +197,7 @@ export async function imageRequest(
 						log("AI-Keys: Response Success")
 
 						if (!webview)
-							write(`\n\n${comment} Image URL link:\n${comment} ${res}`, aiName, webview)
+							write(`\n\n${comment} Image URL link:\n${comment} ${res}`, aiName, webview, "openai")
 					})
 				})
 				.catch((error) => {

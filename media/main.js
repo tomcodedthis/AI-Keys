@@ -204,7 +204,8 @@
 				msg.text = msg.text.split(">").slice(1).join(">")
 		}
 
-		textCont.innerHTML = msg.text.trim()
+		msg.text.split("<br>").filter(word => word !== "<br>").join("\n")
+		textCont.innerText = msg.text.trim()
 
 		return textCont
 	}

@@ -73,7 +73,7 @@ export async function startRequest(
 						await hf
 							.textGeneration(req)
 							.then((res) => {
-								write(res.generated_text, modelName, webview, nextLine)
+								write(res.generated_text, modelName, webview, "huggingface", nextLine)
 								updateChat([{ role: "assistant", content: res.generated_text }])
 							})
 							.catch((error) => {
@@ -86,7 +86,7 @@ export async function startRequest(
 						await hf
 							.translation(req)
 							.then((res) => {
-								write(res.translation_text, modelName, webview, nextLine)
+								write(res.translation_text, modelName, webview, "huggingface", nextLine)
 								updateChat([{ role: "assistant", content: res.translation_text }])
 							})
 							.catch((error) => {
@@ -103,7 +103,7 @@ export async function startRequest(
 						await hf
 							.automaticSpeechRecognition(auidoReq)
 							.then((res) => {
-								write(titleCase(res.text), modelName, webview, nextLine)
+								write(titleCase(res.text), modelName, webview, "huggingface", nextLine)
 								updateChat([{ role: "assistant", content: res.text }])
 							})
 							.catch((error) => {
