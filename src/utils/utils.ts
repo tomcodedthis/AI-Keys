@@ -102,7 +102,8 @@ export function write(
 	res: string,
 	aiName: string,
 	webview?: vscode.WebviewView,
-	nextLine?: number
+	provider?: string,
+	nextLine?: number,
 ) {
 	notif(`Here's what ${titleCase(aiName)} thinks` as string, 5)
 	log("AI-Keys: Response Success")
@@ -150,11 +151,11 @@ export function write(
 	updateChat(
 		[
 			{
-				role: "assistant",
+				role: aiName,
 				content: res,
 			},
 		],
-		true
+		provider === "openai" ? true : false
 	)
 }
 

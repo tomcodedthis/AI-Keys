@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.25
+
+- Fully functional chat window that supports multiple providers, varied forms of generative AI and hundreds of AI models.
+- Minor bug fixes.
+
 ## 0.0.22
 
 - Multiple provider suppport in chat (Hugging Face, Clarifai).

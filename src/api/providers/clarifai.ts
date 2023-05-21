@@ -112,7 +112,7 @@ export async function imageRecognitionRequest(
 						)
 					}
 
-					write(conceptList.join(""), clarifai.modelID, webview)
+					write(conceptList.join(""), clarifai.modelID, webview, "clarifai")
 					updateChat([{ role: "assistant", content: conceptList.join("") }])
 				})
 			} catch (error: any) {
