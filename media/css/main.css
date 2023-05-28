@@ -2,7 +2,7 @@
 	--padding: 8px;
 	--paddingY: 6px;
 	--radius: 6px;
-	--gap: 8px;
+	--gap: 6px;
 	--main-font: 12px;
 	--sub-font: 11px;
 	--borer-radius: 6px;
@@ -21,6 +21,8 @@ body {
 	height: 100vh;
 	display: grid;
 	gap: var(--gap);
+	background-color: var(--vscode-sideBar-background);
+	opacity: 0.8;
 }
 .body {
 	grid-template-rows: minmax(180px, 3fr) minmax(280px, 1fr);
@@ -153,7 +155,7 @@ button:hover {
 	gap: var(--gap);
 	padding: calc(var(--padding) * 1.2);
 	margin: 0 !important;
-	background-color: var(--vscode-editor-background);
+	background-color: var(--vscode-sideBar-background);
 	border-radius: calc(var(--padding) / 2);
 }
 .user {
@@ -208,7 +210,7 @@ button:hover {
 	height: 100%;
 	width: 100%;
 	padding: calc(var(--padding) * 1.5) 0;
-	background-color: var(--vscode-editor-background);
+	background-color: var(--vscode-sideBar-background);
 	border-radius: 0;
 }
 .toggle-btn i {
@@ -234,8 +236,8 @@ button:hover {
 	grid-column: 1 / span 2;
 }
 .bg-main {
-	background-color: var(--vscode-editor-background);
-	fill: var(--vscode-editor-background);
+	background-color: var(--vscode-sideBar-background);
+	fill: var(--vscode-sideBar-background);
 }
 .bg-sub {
 	background-color: var(--vscode-input-foreground);

@@ -1,7 +1,6 @@
 import * as vscode from "vscode"
 import { MessageHistory, PromptConfig } from "../../utils/types"
 import {
-	CHAT_LOG,
 	CHAT_SYSTEM_DEFAULT,
 	FREQ_PEN_DEFAULT,
 	GPT_TURBO_MODELS,
@@ -20,7 +19,6 @@ import {
 	CreateImageRequestSizeEnum,
 	CreateChatCompletionRequest,
 	ChatCompletionRequestMessage,
-	ChatCompletionResponseMessage,
 } from "openai"
 import { notif, log, download, write, updateChat } from "../../utils/utils"
 import { processAPI, processError } from "../process/process"
@@ -156,7 +154,7 @@ export async function textRequest(
 
 					write(res, aiName, webview, "openai", nextLine)
 
-					updateChat([{ role: "assistant", content: res }] as MessageHistory, true)
+					updateChat([{ role: aiName, content: res }] as MessageHistory, true)
 				})
 				.catch((error) => {
 					notif(`OpenAI Error: ${error.response.data.error.message}`, 20)
@@ -192,12 +190,12 @@ export async function imageRequest(
 					const res = response.data.data[0].url as string
 					const comment = getComment()
 
-					await download(res, prompt, webview).then(() => {
+					await download(res, prompt, aiName, webview).then(() => {
 						notif(`Here's your ${aiName.toUpperCase()} image` as string, 5)
 						log("AI-Keys: Response Success")
 
 						if (!webview)
-							write(`\n\n${comment} Image URL link:\n${comment} ${res}`, aiName, webview, "openai")
+							write(`\n\n${comment} Image URL:\n${comment} ${res}`, aiName, webview, "openai")
 					})
 				})
 				.catch((error) => {
