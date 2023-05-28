@@ -58,10 +58,7 @@ export type MessageHistory = [
 export type MessageLog =
 	| ChatCompletionRequestMessage
 	| ChatCompletionResponseMessage
-	| {
-			role: string
-			content: string
-	  }
+	| { role: string, content: string }
 
 export interface ChatMessage {
 	message: CreateChatCompletionRequest | ChatCompletionResponseMessage | string

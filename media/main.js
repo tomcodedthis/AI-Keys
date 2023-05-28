@@ -149,15 +149,8 @@
 	function chatBox(speaker, text) {
 		let msgs = []
 		let isCode = false
-
-		text.split("```").forEach((section) => {
-			section = section.split("\n").join("\n")
-			isCode
-				? msgs.push({ type: "code", text: section })
-				: msgs.push({ type: "normal", text: section })
-
-			isCode = !isCode
-		})
+		console.log("speaker:", speaker)
+		let isHTML = speaker === "dalle" ? true : false
 
 		const msgCont = document.createElement("div")
 		msgCont.classList.add("input", "message", speaker === "user" ? "user" : "ai")
@@ -169,8 +162,17 @@
 		const textCont = document.createElement("div")
 		textCont.classList.add("message-content")
 
+		text.split("```").forEach((section) => {
+			section = section.split("\n").join("\n")
+			isCode
+				? msgs.push({ type: "code", text: section })
+				: msgs.push({ type: "normal", text: section })
+
+			isCode = !isCode
+		})
+
 		msgs.forEach((msg) => {
-			textCont.append(chatMessage(msg))
+			textCont.append(chatMessage(msg, isHTML))
 		})
 
 		msgCont.append(speakerCont, textCont)
@@ -178,7 +180,7 @@
 		return msgCont
 	}
 
-	function chatMessage(msg) {
+	function chatMessage(msg, isHTML) {
 		const isCode = msg.type === "code"
 		const COMMON_PROGRAMING_LANGUAGES = [
 			"javascript",
@@ -194,6 +196,7 @@
 		let firstWord = msg.text.split(" ")[0].split("\n")[0].split("<br>")[0].trim()
 
 		textCont.classList.add(isCode ? "code-block" : "text-block")
+		console.log("isHTML:", isHTML)
 
 		if (isCode && COMMON_PROGRAMING_LANGUAGES.includes(firstWord)) {
 			msg.text = msg.text.replace(`${firstWord}`, " ").trim()
@@ -204,8 +207,13 @@
 				msg.text = msg.text.split(">").slice(1).join(">")
 		}
 
-		msg.text.split("<br>").filter(word => word !== "<br>").join("\n")
-		textCont.innerText = msg.text.trim()
+		if (isHTML) {
+			msg.text.split("\n").filter(word => word !== "\n").join("<br>")
+			textCont.innerHTML = msg.text.trim()
+		} else {
+			msg.text.split("<br>").filter(word => word !== "<br>").join("\n")
+			textCont.innerText = msg.text.trim()
+		}
 
 		return textCont
 	}

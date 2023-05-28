@@ -56,7 +56,7 @@ export function join(text: string, symbol: string) {
 	return text.split(" ").join(symbol)
 }
 
-export async function download(url: string, prompt: string, webview?: vscode.WebviewView) {
+export async function download(url: string, prompt: string, aiName: string, webview?: vscode.WebviewView) {
 	const workspaceFolders = vscode.workspace.workspaceFolders
 	if (!workspaceFolders) {
 		notif("No workspace folder to save to")
@@ -84,14 +84,14 @@ export async function download(url: string, prompt: string, webview?: vscode.Web
 			let message = ""
 
 			if (webview) {
-				message += `Image URL: <a href="${url}">${prompt}</a>\n\n`
+				message += `Image URL: <a href="${url}">${prompt}</a><br><br>`
 			}
 
 			message += webview
 				? `Image downloaded to your current working directory`
 				: `\n${comment}\n${comment} Image downloaded to your current working directory\n`
 
-			write(message, "assistant", webview)
+			write(message, aiName, webview)
 
 			log("AI-Keys: Image download success")
 		})
@@ -112,12 +112,8 @@ export function write(
 	const comment = getComment()
 	const newLine = ["-", " ", "<"]
 	let lineLength = 0
-	let prevLetter: string
 
 	if (webview) {
-		// Do chat things
-		res = res.replace(/\n(?!\n)/g, "<br>")
-
 		const message: Message = {
 			command: "sendResponse",
 			data: {
